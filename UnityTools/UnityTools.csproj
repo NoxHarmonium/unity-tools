@@ -19,6 +19,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <additionalargs>--aot-only</additionalargs>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="Custom" name="Arrange Code" command="mono ../Tools/NArrange/bin/narrange-console.exe ${ProjectDir}" workingdir="${ProjectDir}" />
+        <Command type="AfterBuild" name="Unity Build" command="../unity-check.sh ${ProjectDir}" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -30,9 +37,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\..\Applications\Unity\Unity.app\Contents\Frameworks\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Applications\Unity\Unity.app\Contents\Frameworks\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityScript">
+      <HintPath>..\..\..\..\..\Applications\Unity\Unity.app\Contents\Frameworks\Mono\lib\mono\unity\UnityScript.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityScript.Lang">
+      <HintPath>..\..\..\..\..\Applications\Unity\Unity.app\Contents\Frameworks\Mono\lib\mono\unity\UnityScript.Lang.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Threading\UnityTask.cs" />
+    <Compile Include="Threading\UnityDispatcher.cs" />
+    <Compile Include="Shared\UnityToolsSceneObject.cs" />
+    <Compile Include="Shared\IInitialiseOnStartup.cs" />
+    <Compile Include="Utils\ReflectionHelpers.cs" />
+    <Compile Include="IO\UnityAgent.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Threading\" />
+    <Folder Include="Shared\" />
+    <Folder Include="Utils\" />
+    <Folder Include="IO\" />
+  </ItemGroup>
 </Project>
