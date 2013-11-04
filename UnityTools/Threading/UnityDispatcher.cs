@@ -1,12 +1,12 @@
-﻿using UnityTools.Shared;
-
-namespace UnityTools.Threading
+﻿namespace UnityTools.Threading
 {
     using System;
     using System.Collections.Generic;
     using System.Threading;
 
     using UnityEngine;
+
+    using UnityTools.Shared;
 
     /// <summary>
     /// The <see cref="UnityDispatcher"/> class allows you to execute code on the main Unity thread.
@@ -68,6 +68,11 @@ namespace UnityTools.Threading
             }
         }
 
+        public void Initialise()
+        {
+            UnityToolsSceneObject.Instance.AddComponent<UnityDispatcher>();
+        }
+
         private static int GetCurrentThreadId()
         {
             // Although AppDomain.GetCurrentThreadId is depricated, ManagedThreadId did not seem to work properly
@@ -114,15 +119,6 @@ namespace UnityTools.Threading
             }
         }
 
-
-        #region IInitialiseOnStartup implementation
-
-        public void Initialise()
-        {
-            UnityToolsSceneObject.Instance.AddComponent<UnityDispatcher>();
-        }
-
-        #endregion
         #endregion Methods
     }
 }

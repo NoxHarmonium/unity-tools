@@ -1,7 +1,7 @@
-using System;
-
-namespace UnityTools.Shared
+﻿namespace UnityTools.Shared
 {
+    using System;
+
     /// <summary>
     /// Classed implementing this interface will have their Initialise method
     /// called as soon as the <see cref="UnityToolsSceneObject"/> is initialised.
@@ -9,7 +9,10 @@ namespace UnityTools.Shared
     /// </summary>
     public interface IInitialiseOnStartup
     {
+        #region Methods
+
         void Initialise();
+
+        #endregion Methods
     }
 }
-
