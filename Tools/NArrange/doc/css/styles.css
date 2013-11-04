@@ -1,0 +1,11 @@
+.separator {  background-color: #999999}
+.menu {  background-color: #EFEFEF; font-family: Arial, Helvetica, sans-serif; font-weight: bolder; color: #FF9900; text-decoration: none; border: 1px #666666 solid; height: auto; width: 130px; padding-left: 5px; margin-top: 1px; margin-right: 1px; margin-bottom: 1px; margin-left: 1px; padding-top: 1px; padding-right: 5px; padding-bottom: 1px}
+.bordered {  border: #999999; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px}
+.menucell {  background-color: #E2E2E2}
+a.menu:hover {  color: #CC3333; background-color: #CCCCCC; cursor: crosshair}
+.caption {  font-family: Arial, Helvetica, sans-serif; font-weight: bolder; color: #CC3333; clip:   rect(   ); padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; font-size: 16px}
+h2 {  font-family: Arial, Helvetica, sans-serif; color: #FD9E35; clip:    rect(   ); font-size: 14pt}
+p {  font-family: Arial, Helvetica, sans-serif; font-size: 11pt}
+li { font-family: Arial, Helvetica, sans-serif; list-style-type: square; font-size: 11pt}
+h3 {  font-family: Arial, Helvetica, sans-serif; font-size: 12pt}
+h1 {  font-family: Arial, Helvetica, sans-serif; font-size: 18pt}

@@ -1,0 +1,530 @@
+<html><!-- #BeginTemplate "/Templates/NArrangeDoc.dwt" -->
+<head>
+<!-- #BeginEditable "doctitle" --> 
+<title>NArrange - .NET Code Organizer/Formatter/Beautifier - Documentation</title>
+<!-- #EndEditable -->
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<META NAME="Description" CONTENT="NArrange is a tool for arranging .NET source code. This code beautifier allows you to sort and organize C# and VB.NET code members into groups or regions.">
+<link rel="stylesheet" href="css/styles.css" type="text/css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-6776903-3");
+pageTracker._setDomainName("none");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<table width="100%" height="100%" cellpadding="10">
+  <tr>
+<td valign="top">
+      <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td width="80"> 
+            <div align="center"><a href="http://www.narrange.net"><img src="Images/Logo.png" width="80" height="30" border="0"></a></div>
+          </td>
+          <td width="812"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td> 
+                  <div class="caption"> 
+                    <div align="center">An open source tool for arranging .NET 
+                      source code</div>
+                  </div>
+                </td>
+                <td> 
+                  <div align="center"><a href="http://sourceforge.net" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net');"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=213288&amp;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a></div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr height="6"> 
+          <td width="80" class="separator"> 
+            <div></div>
+          </td>
+          <td width="812" class="separator"> 
+            <div></div>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="2" valign="top" class="margin"> 
+            <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr> 
+                <td valign="top"><!-- #BeginEditable "Content" -->
+                  <h1>NArrange - .NET Code Organizer/Formatter/Beautifier: Documentation</h1>
+                  <p>Version 0.2.7.0<br>
+                    Last Modified: 12/23/2008<br>
+                  </p>
+                  <h2>Index</h2>
+                  <p>- <a href="#introduction">Introduction</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#whatis">What is NArrange?</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#supportedlanguages">Supported 
+                    Languages<br>
+                    </a> &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#obtaining">Obtaining 
+                    NArrange</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#licensing">Licensing</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#support">Support</a><br>
+                    - <a href="#using">Using NArrange</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#demo">Demo</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#commandline">Command Line 
+                    Usage</a><br>
+                    &nbsp;&nbsp;&nbsp; - <a href="#vssetup">Microsoft&reg; Visual 
+                    Studio&reg; Setup</a><br>
+                    - <a href="#configuration">Configuration</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#createconfig">Creating 
+                    a Custom Configuration File</a><br>
+                    &nbsp;&nbsp;&nbsp; - <a href="#expressions">Sorting and Expressions</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#formatting">Formatting</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#fileextensions">File Extensions 
+                    and Filtering</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#encoding">File Encoding</a><br>
+                    - <a href="#limitations">Limitations</a><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- <a href="#preprocessor">Preprocessor 
+                    Directives</a><br>
+                    <br>
+                  </p>
+                  <h2>Introduction<a name="introduction"></a></h2>
+                  <h3>What is NArrange?<a name="whatis"></a></h3>
+                  <p>NArrange is a stand-alone, configurable .NET code beautification 
+                    tool that automatically organizes code members and elements 
+                    within .NET classes. It allows developers to easily sort class 
+                    contents according to their style and layout conventions. 
+                    NArrange works by parsing source code files into a document 
+                    object model, arranging the elements then rewriting the arranged 
+                    source code.</p>
+                  <p>NArrange helps reduce the amount of time developers spend 
+                    arranging members within source code files and when used as 
+                    part of check-in procedures can also help reduce source code 
+                    repository conflicts. With NArrange, developers don't need 
+                    to worry about where they place a new member definition in 
+                    a class, they can just type away and run NArrange prior to 
+                    compilation. After formatting, the new member will be automatically 
+                    moved to the appropriate location in the source file. NArrange 
+                    is not only a great time saver, but it also helps enforce 
+                    coding style standards across a team when a common configuration 
+                    file is used.</p>
+                  <h3>Supported Languages<a name="supportedlanguages"></a></h3>
+                  <p>NArrange currently supports organization of C# and Visual 
+                    Basic .NET source code files. Although NArrange has been built 
+                    and tested under the .NET Framework 2.0 it includes support 
+                    for many 3.0 and 3.5 language features such as:</p>
+                  <ul>
+                    <li>Partial Methods</li>
+                    <li>Extension Methods</li>
+                    <li>Object Initializers</li>
+                  </ul>
+                  <p>Many 3.+ language features are excluded from this list, such 
+                    as LINQ and Lambda Expressions. However, NArrange does not 
+                    currently parse to the statement level of constructors, methods 
+                    and properties, so these features are inherently supported.<br>
+                    <br>
+                    NArrange has been designed with the intention of supporting 
+                    many .NET languages. If you are interested in implementing 
+                    a parser/writer for an additonal CLI language, please contact 
+                    an NArrange contributor through the <a href="http://sourceforge.net/projects/narrange/" target="_blank" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/projects/narrange');">SourceForge 
+                    project site</a>. NArrange is still in the early stages of 
+                    development so any suggestions to help make the framework 
+                    more compatible with other languages would be greatly appreciated.</p>
+                  <h3>Obtaining NArrange<a name="obtaining"></a></h3>
+                  <p>NArrange is an open source tool and can be downloaded from 
+                    SourceForge at <a href="http://sourceforge.net/project/showfiles.php?group_id=213288" target="_blank" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/download');">http://sourceforge.net/project/showfiles.php?group_id=213288</a>.</p>
+                  <h3>Licensing<a name="licensing"></a></h3>
+                  <p>NArrange is licensed and distributed under the Common Public 
+                    License Version 1.0. A copy of this license is included with 
+                    the source distribution and can also be viewed online at <a href="http://www.narrange.net/license.txt" target="_blank" onClick="javascript: pageTracker._trackPageview('/www.narrange.net/license.txt');">http://www.narrange.net/license.txt</a>. 
+                    <br>
+                  </p>
+                  <h3>Support<a name="support"></a></h3>
+                  <p>Please direct all support questions, feature requests and 
+                    bug reports to the <a href="http://sourceforge.net/projects/narrange/" target="_blank" onClick="javascript: pageTracker._trackPageview('/outgoing/sourceforge.net/projects/narrange');">NArrange 
+                    SourceForge project site</a>.<br>
+                    <br>
+                  </p>
+                  <p></p>
+                  <h2>Using NArrange<a name="using"></a></h2>
+                  <h3>Demo<a name="demo"></a></h3>
+                  <p>To demonstrate the common usage scenarios of NArrange we'll 
+                    start by creating a new project in our C# editor, in this 
+                    case Visual Studio&reg;, and add a stub class with a constructor. 
+                    Note that since NArrange is a stand-alone tool without any 
+                    IDE dependencies, it can be used along with any code editor 
+                    or within automated build processes.</p>
+                  <p><img src="Images/Demo1Initial.png"><br>
+                    <i>Figure: New Project with a Class Stub</i></p>
+                  <p>With the project saved, NArrange can then be run against 
+                    the source code file, project or solution. For running NArrange 
+                    from the command line refer to <a href="#commandline">Command 
+                    Line Usage</a> or to integrate with Visual Studio&reg; as 
+                    an external tool see <a href="#vssetup">Microsoft&reg; Visual 
+                    Studio&reg; Setup</a>. When running NArrange with an editor, 
+                    it is recommended to backup or commit your source first or 
+                    use the built-in backup feature, which makes reverting formatting 
+                    changes a snap. Either way, please be sure to protect your 
+                    time investment in your code prior to running the tool.</p>
+                  <p><img src="Images/Demo2Run.png"><br>
+                    <i>Figure: Running NArrange as a VS External Tool</i></p>
+                  <p>After running NArrange, the constructor we added to the stub 
+                    class will automatically be enclosed in a #Constructors region 
+                    (see image below).</p>
+                  <p><img src="Images/Demo3OrganizedAnnotated.png"><br>
+                    <i>Figure: After Running NArrange Against the Stub Class</i></p>
+                  <p>Since our stub class doesn't yet have any functionality we'll 
+                    then add a new method, called Demo, that writes a friendly 
+                    message to the console. Note that when adding the new method 
+                    we're not taking any care in regard to its placement within 
+                    the class. In this case, we are adding it as the first member 
+                    just inside the class body, before the constructor.</p>
+                  <p><img src="Images/Demo4AddMember.png"> <br>
+                    <i>Figure: Adding a New Member</i></p>
+                  <p>After adding the new member we'll run NArrange again against 
+                    the source file or project. The new method will be automatically 
+                    moved to the proper location in the file and enclosed in an 
+                    appropriate region (see below). The default configuration 
+                    for NArrange also sorts members within groups or regions alphabetically 
+                    by member name.</p>
+                  <p><img src="Images/Demo5RearrangedAnnotated.png"><br>
+                    <i>Figure: Rearranged Class with New Method</i></p>
+                  <p>Scrolling up to the top of the source file, you will also 
+                    notice that NArrange automatically enclosed the header comments 
+                    in a region and applied grouping and sorting to using directives 
+                    (see image below).</p>
+                  <p><img src="Images/DemoHeaderAndUsingsAnnotated.png"><br>
+                    <i>Figure: Header Region and Sorted Using Directives</i></p>
+                  <h3>Command Line Usage<a name="commandline"></a></h3>
+                  <p>To arrange a file just run the following:</p>
+                  <pre>&gt;narrange-console &lt;source file&gt; [optional output file]</pre>
+                  <p>If an output file is not specified, the original source file 
+                    will be overwritten. Alternatively, you can run NArrange against 
+                    a C# or VB project file or solution. When arranging a project 
+                    or solution, the original source files will be overwritten.</p>
+                  <p>The command line usage is as follows:</p>
+                  <pre>narrange-console &lt;input&gt; [output] [/c:configuration]
+        [/b] [/r] [/t]
+
+
+<b>input</b>   Specifies the source code file, project, solution or 
+        directory to arrange.
+
+<b>output</b>  For a single source file, specifies the output file
+        to write arranged code to.
+        [Optional] If not specified the input source
+        file will be overwritten.
+
+<b>/c</b>      Configuration - Specifies the XML configuration file to use.
+        [Optional] If not specified the default
+        configuration will be used.
+
+<b>/b</b>      Backup - Specifies to create a backup before arranging
+        [Optional] If not specified, no backup will be created.
+        Only valid if an output file is not specified
+        and cannot be used in conjunction with Restore.
+
+<b>/r</b>      Restore - Restores arranged files from the latest backup
+        [Optional] When this flag is provided, no files will be arranged.
+        Only valid if an output file is not specified
+        and cannot be used in conjunction with Backup.
+
+<b>/t</b>      Trace - Detailed logging</pre>
+                  <h3>Microsoft&reg; Visual Studio&reg; Setup<a name="vssetup"></a></h3>
+                  <ol>
+                    <li>From the Tools menu, select External Tools.</li>
+                    <li>Add a new entry for NArrange. 
+                      <ul>
+                        <li>For the Command, select the location of <i>narrange-console.exe</i>.</li>
+                        <li> For arguments, pass the solution, project or file 
+                          path macro depending on your preference. When choosing 
+                          this, you may want to take into consideration your revision 
+                          control system (i.e. whether or not files are marked 
+                          as read-only). NArrange cannot arrange read-only files. 
+                          It is recommended to pass the /b argument to specify 
+                          that an automatic backup be created in your user temp 
+                          directory. </li>
+                      </ul>
+                      <br>
+                      <p><img src="Images/VSExternalTool.png" width="471" height="458"></p>
+                    </li>
+                    <li>It is also recommended to setup a restore command using 
+                      the same parameters, replacing /b with /r. However, be careful 
+                      when using restore as it will revert any edits made to a 
+                      file since the last NArrange. 
+                      <p><img src="Images/VSExternalToolRestore.png" width="471" height="458"><br>
+                        <br>
+                      </p>
+                    </li>
+                  </ol>
+                  <h2>Configuration<a name="configuration"></a></h2>
+                  <h3>Creating a Custom Configuration File<a name="createconfig"></a></h3>
+                  <p>By default, NArrange uses a configuration that is, for the 
+                    most part, compatible with the member ordering rules defined 
+                    by the Microsoft StyleCop source analysis tool. An exception 
+                    to this is file header regions.</p>
+                  <p>To override the default arrangement of source code members, 
+                    a custom configuration file can be used. To create your own 
+                    custom configuration file, you can start by creating a copy 
+                    of DefaultConfig.xml and renaming appropriately. Note that 
+                    NArrange does not read DefaultConfig.xml, but rather it is 
+                    provided as an example for creating a custom configuration. 
+                    The actual default configuration is embedded within the NArrange 
+                    core assembly.</p>
+                  <p>The NArrange Configuration Editor, shown below, can be used 
+                    to ease editing of the XML configuration. It can be launched 
+                    using <i>narrange-config.exe</i>.</p>
+                  <p><img src="Images/ConfigEditor.png" width="645" height="429"><br>
+                    <i>Figure: Configuration Editor </i><br>
+                    <br>
+                    The figure below shows sections from a sample XML configuration 
+                    file. NArrange uses the ordering of Element and Region tags 
+                    in the configuration file to define the ordering of code members 
+                    in the output source files.</p>
+                  <p><img src="Images/DemoConfig.png" ><br>
+                    <i>Figure: Sample NArrange Configuration File</i></p>
+                  <h3>Sorting and Expressions<a name="expressions"></a></h3>
+                  <p>By defining a sort attribute for elements in a region, NArrange 
+                    will sort those elements alphabetically in the region by the 
+                    specified attribute. Valid element attributes are:</p>
+                  <ul>
+                    <li><b>Name</b> - Returns the code element name.<br>
+                      <br>
+                    </li>
+                    <li><b>Access</b> - Returns the element access. <br>
+                      Valid comparison value strings for this attribute are:</li>
+                    <ul>
+                      <li>None</li>
+                      <li>Public</li>
+                      <li>Protected</li>
+                      <li>Internal</li>
+                      <li>Protected, Internal<br>
+                        <br>
+                      </li>
+                    </ul>
+                    <li><b>Modifier</b> - Returns element modifiers as a comma 
+                      separated list. <br>
+                      Valid comparison value strings for this attribute are: 
+                      <ul>
+                        <li>Abstract</li>
+                        <li>Sealed</li>
+                        <li>Static</li>
+                        <li>Unsafe</li>
+                        <li>Virtual</li>
+                        <li>Override</li>
+                        <li>New</li>
+                        <li>ReadOnly</li>
+                        <li>Constant</li>
+                        <li>External</li>
+                        <li>Partial<br>
+                          <br>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><b>ElementType</b> - Returns the NArrange element type. 
+                      <br>
+                      Valid comparison value strings for this attribute are: 
+                      <ul>
+                        <li>Comment</li>
+                        <li>Attribute</li>
+                        <li>Using</li>
+                        <li>Namespace</li>
+                        <li>Region</li>
+                        <li>ConditionDirective</li>
+                        <li>Field</li>
+                        <li>Constructor</li>
+                        <li>Property</li>
+                        <li>Method</li>
+                        <li>Event</li>
+                        <li>Delegate</li>
+                        <li>Type<br>
+                          <br>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><b>Type</b> - Returns the return type of the element (e.g. 
+                      'string'). <br>
+                      For Type elements, this returns the sub-type: 'Class', 'Structure', 
+                      'Interface', 'Enum' or 'Module' (VB only)<br>
+                      <br>
+                    </li>
+                    <li><b>Attributes</b> - Returns a comma separated list of 
+                      the names of all attributes associated with an element.</li>
+                  </ul>
+                  <p>Attributes can also be qualified with a scope. For example 
+                    <font face="Courier New, Courier, mono" color="#000066">$(Element.Name)</font> 
+                    or <font face="Courier New, Courier, mono" color="#000066">$(Parent.ElementType)</font>.</p>
+                  <p>You may notice that filter conditions can be applied to elements, 
+                    which are used to filter elements into the appropriate group 
+                    or region. Filter expressions can use the element attributes 
+                    above using the <font face="Courier New, Courier, mono" color="#000066">$(AttributeHere)</font> 
+                    syntax. Filter expressions use string comparison and the following 
+                    operators are available:</p>
+                  <table width="362" border="1" cellspacing="0" cellpadding="5">
+                    <tr> 
+                      <td width="186"><b>Operator Name</b></td>
+                      <td width="150"><b>Syntax</b></td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Equality</td>
+                      <td width="150">==</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Inequality</td>
+                      <td width="150">!=</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Contains</td>
+                      <td width="150">:</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Regular Expression Match</td>
+                      <td width="150">=~</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Logical Or</td>
+                      <td width="150">Or</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Logical And</td>
+                      <td width="150">And</td>
+                    </tr>
+                    <tr> 
+                      <td width="186">Negate</td>
+                      <td width="150">!(<i>inner expression</i>)</td>
+                    </tr>
+                  </table>
+                  <p>Strings in element expressions should be enclosed with single 
+                    quotes.</p>
+                  <h3>Formatting<a name="formatting"></a></h3>
+                  <p>The following formatting options are available.</p>
+                  <p><b>Tabs</b> - Allows specification of &quot;Tabs&quot; or 
+                    &quot;Spaces&quot; and the number of spaces per tab </p>
+                  <pre>&lt;CodeConfiguration&gt;
+    &lt;Formatting&gt;<br>        ...<br>        <b><font color="#000066">&lt;Tabs Style=&quot;Tabs&quot; SpacesPerTab=&quot;4&quot;/&gt;</font></b><br>        ...
+    &lt;/Formatting&gt;<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p><b>Closing Comments</b> - Allows specification of whether 
+                    or not a closing comment should be written after an element 
+                    with body text (e.g. method, constructor). This is off by 
+                    default. The Format string allows accepts element attribute 
+                    parameters. </p>
+                  <pre>&lt;CodeConfiguration&gt;
+    &lt;Formatting&gt;<br>        ...<br>    <b><font size="+1">   </font><font color="#000066">&lt;ClosingComments Enabled=&quot;false&quot; Format=&quot;End $(ElementType) $(Name)&quot;/&gt;</font></b><br>        ...
+    &lt;/Formatting&gt;<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p><b>Regions </b> - Formatting and configuration for all regions. 
+                    The &quot;EndRegionNameEnabled&quot; flag allows control over 
+                    whether the region name is written in the closing preprocessor 
+                    directive.</p>
+                  <pre>&lt;CodeConfiguration&gt;
+    &lt;Formatting&gt;<br>        ...<br>        <b><font color="#000066">&lt;Regions EndRegionNameEnabled=&quot;true&quot; Style=&quot;Default&quot;<br>            CommentDirectiveBeginPattern=&quot;^\s?\$\(\s?Begin\s?\)\s?(?&amp;lt;Name&amp;gt;.*)$&quot;<br>            CommentDirectiveEndPattern=&quot;^\s?\$\(\s?End\s?\)\s?(?&amp;lt;Name&amp;gt;.*)?$&quot;<br>            CommentDirectiveBeginFormat=&quot; $(Begin) {0}&quot;<br>            CommentDirectiveEndFormat=&quot; $(End) {0}&quot;/&gt;</font></b><br>        ...
+    &lt;/Formatting&gt;<br>&lt;/CodeConfiguration&gt;
+</pre>
+                  <p>Additionally, the Style attribute controls how regions are 
+                    written. If the CommentDirective region style is chosen, then 
+                    regions will be parsed and written according to the comment 
+                    directive regular expression pattern and format properties. 
+                    Note that if the comment directive attributes are modified, 
+                    it is critical that the regular expressions correspond with 
+                    the format strings. If there is a mismatch, then after initial 
+                    arrangement, NArrange will no longer be able to interpret 
+                    the comments as region start and end comments. When the comment 
+                    directive region style is used and the format of the comments 
+                    needs to be changed, it is necessary to change the style to 
+                    the default (Directive), arrange, then modify the patterns 
+                    and format before rearranging the source code. </p>
+                  <p>Another style that is available is NoDirective. With this 
+                    style, members within the configured regions will be written 
+                    without any directives (as a group). Directives can be omitted 
+                    for individual regions by setting the <font face="Courier New, Courier, mono" color="#000066">Region</font> 
+                    element's <font face="Courier New, Courier, mono" color="#000066">DirectivesEnabled</font> 
+                    attribute to false. This technique is also useful for grouping 
+                    elements. </p>
+                  <p>More formatting options will likely be made available in 
+                    future versions of NArrange.<br>
+                  </p>
+                  <h3>File Extensions and Filtering<a name="fileextensions"></a></h3>
+                  <p>The default NArrange configuration file has standard extension 
+                    names set up for each included language package (C# and Visual 
+                    Basic .NET). Thus, .cs and .vb files will automatically be 
+                    handled. If however, an additional file extension needs to 
+                    be recognized as source code, an extension can be registered 
+                    in the XML configuration file.</p>
+                  <p>The following demonstrates adding an additional file extension, 
+                    .mycs, to be recognized as C# source code:</p>
+                  <pre>&lt;SourceHandler Language=&quot;CSharp&quot; Assembly=&quot;NArrange.CSharp, Version=0.2.1.0, Culture=neutral, PublicKeyToken=null&quot;&gt;<br>    &lt;!-- List of project extensions handled by the handler's IProjectParser --&gt;<br>    &lt;ProjectExtensions&gt;<br>        &lt;Extension Name=&quot;csproj&quot;/&gt;<br>    &lt;/ProjectExtensions&gt;<br>    &lt;!-- List of source file extensions valid for the handler's ICodeParser--&gt;<br>    &lt;SourceExtensions&gt;<br>        &lt;Extension Name=&quot;cs&quot;&gt;<br>            &lt;Filter Condition=&quot;!($(File.Name) : '.Designer.')&quot;/&gt;<br>        &lt;/Extension&gt;<br>        &lt;!-- If your project uses other extensions for C# files add them here--&gt;<br>        <b><font color="#000066">&lt;Extension Name=&quot;mycs&quot;/&gt;</font></b><br>    &lt;/SourceExtensions&gt;<br>&lt;/SourceHandler&gt;</pre>
+                  <p>In the configuration snippet above it should also be observed 
+                    that the .cs extension has filtering applied. By default, 
+                    .Designer.cs files will be excluded from arrangement. This 
+                    is done as to not conflict with code generators, visual designers 
+                    and custom tools. If further filtering is required, the following 
+                    attributes are available for files:</p>
+                  <ul>
+                    <li>File.Name - Returns the filename without a path</li>
+                    <li>File.Path - Returns the entire path for the file</li>
+                    <li>File.Attributes - Returns file attributes as a comma separated 
+                      list (for a list of available values, refer to the <i>System.IO.FileAttributes</i> 
+                      enumeration) </li>
+                  </ul>
+                  <h3>File Encoding<a name="encoding"></a></h3>
+                  <p>By default, NArrange will attempt to detect the encoding 
+                    for your source code files. File encodings supported for detection 
+                    include the system Ansi Default (e.g. CodePage 1252 Western-European), 
+                    UTF-8, UTF-16 (big/little endian) and UTF-32 (little endian). 
+                    If the detection process does not properly detect the encoding, 
+                    it is possible to force a particular encoding for reading 
+                    and writing all source code files. </p>
+                  <p>The following setting is used to provide the default encoding 
+                    detection:</p>
+                  <pre>&lt;CodeConfiguration&gt;<br>    ...<br>    <b><font color="#000066">&lt;Encoding CodePage=&quot;Detect&quot;/&gt;</font></b> <br>    ...<br>&lt;/CodeConfiguration&gt;</pre>
+                  <p>Valid <i>CodePage</i> values include:</p>
+                  <ul>
+                    <li>&quot;Detect&quot; - Detect file encodings (NArrange default) 
+                    </li>
+                    <li>&quot;Default&quot; - Use the system default ANSI encoding 
+                      (e.g. CodePage 1252 Western-European) for all source code 
+                      files </li>
+                    <li>CodePage - e.g. &quot;65001&quot; for UTF-8 for all source 
+                      code files<br>
+                      <br>
+                    </li>
+                  </ul>
+                  <h2>Limitations<a name="limitations"></a></h2>
+                  <h3>Preprocessor Directives<a name="preprocessor"></a></h3>
+                  <p>One of the biggest limitations with the current version of 
+                    NArrange is that it cannot handle many scenarios involving 
+                    preprocessor directives (<font face="Courier New, Courier, mono" color="#000066">#pragma</font>, 
+                    <font color="#000066"> <font face="Courier New, Courier, mono"> 
+                    #define</font></font>, etc.). Thus, you will get a warning 
+                    message indicating that files containing unhandled preprocessor 
+                    directives cannot be parsed. Note that this is not an issue 
+                    if the preprocessor directive is within a member body. </p>
+                  <p>For conditional compilation preprocessor directives (<font face="Courier New, Courier, mono" color="#000066">#if</font>, 
+                    <font color="#000066"> <font face="Courier New, Courier, mono"> 
+                    #else</font></font>, etc.), basic support is available. So 
+                    long as the conditional compilation preprocessor directive 
+                    completely encloses types/members in their entirety (with 
+                    all attributes and comments), NArrange will preserve the directive 
+                    and process any enclosed elements. However, the scenario where 
+                    a directive starts at the class level and intersects a member 
+                    declaration in any manner is not supported and will result 
+                    in a parsing error.</p>
+                  <p>&nbsp;</p>
+                  <!-- #EndEditable --></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td colspan="2"> 
+            <p align="center"><font color="#333333" size="-2">Copyright &copy; 
+              2007-2008 James Nies</font></p>
+          </td>
+        </tr>
+      </table>
+</td>
+</tr>
+</table>
+</body>
+<!-- #EndTemplate --></html>

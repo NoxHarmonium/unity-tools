@@ -1,0 +1,9 @@
+*** IMPORTANT ***
+In version 0.2.7 the default configuration was changed to match the ordering rules enforced by Microsoft's C# source analysis tool StyleCop.  For those wishing to use the old default configuration, a copy has been provided in DefaultConfig.v026.xml.  Please retain a copy of this file for your usage as it may not be distributed in future releases.
+
+The following changes were made in this release:
+
+0.2.9.0
+- Fixed moving C# using statements from the Namespace level to the File level and improved parse error handling.
+- Changed the sort behavior for alias using directives to conform to StyleCop rules SA1209 and SA1211.  The default config has been updated for this behavior.  If you are using a custom configuration, please update the "DefaultUsing" element in your file to pick up this change.
+- Changed the behavior of element sorting to ignore case for string attributes (e.g. name).  This fixes the sorting of using directives for StyleCop rule SA1210.
