@@ -58,6 +58,7 @@
     <Compile Include="Shared\IInitialiseOnStartup.cs" />
     <Compile Include="Utils\ReflectionHelpers.cs" />
     <Compile Include="IO\UnityAgent.cs" />
+    <Compile Include="Threading\UnityTask`1.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
