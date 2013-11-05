@@ -3,7 +3,10 @@
     using System;
 
     using UnityEngine;
-
+    
+    /// <summary>
+    /// Represents the master game object that contains all the component for this project.
+    /// </summary>
     public class UnityToolsSceneObject : MonoBehaviour
     {
         #region Fields
