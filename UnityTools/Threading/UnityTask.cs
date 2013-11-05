@@ -52,21 +52,18 @@
         {
             get
             {
-                if (_finished)
+                if (!_finished)
                 {
-                    if (_succeeded)
-                    {
-                        return _result;
-                    }
-                    else
-                    {
-                        throw _exception;
-                    }
+                    _waitHandle.WaitOne(); // Result blocks until task is completed making the task synchronous
+                }
+                
+                if (_succeeded)
+                {
+                    return _result;
                 }
                 else
                 {
-                    _waitHandle.WaitOne(); // Result blocks until task is completed making the task synchronous
-                    return _result;
+                    throw _exception;
                 }
             }
         }
@@ -79,94 +76,40 @@
         /// Combines multiple tasks of the same type into one callback and runs them simultaneously. On failure the failure callback is called immediately
         /// and the result of the other tasks is discarded.
         /// </summary>
-        /// <param name="tasks">A series of tasks to execute in paralell</param>
+        /// <param name="tasks">A series of tasks to execute in parallel</param>
         public static UnityTask All(params UnityTask[] tasks)
         {
-            UnityTask combinedTask = new UnityTask();
+            return All(false, tasks);
+        }
 
-            int activeTaskCount = tasks.Length;
-            object[] taskResults = new object[activeTaskCount];
-            bool tasksSucceeding = true;
-
-            for (int i = 0; i < tasks.Length; i++)
-            {
-                UnityTask task = tasks[i];
-                int taskCount = i;
-
-                task.Then(
-                    onFulfilled: (object result) =>
-                    {
-                        if (!tasksSucceeding)
-                            return;
-
-                        taskResults[taskCount] = result;
-
-                        activeTaskCount--;
-                        if (activeTaskCount == 0)
-                        {
-                            combinedTask.Resolve(taskResults);
-                        }
-
-                    },
-                    onFailure: (Exception ex) =>
-                    {
-                        tasksSucceeding = false;
-                        combinedTask.Reject(ex); // Bail if one of the task errors out
-                    }
-                );
-            }
-
-            return combinedTask;
+        /// <summary>
+        /// Combines multiple tasks of the same type into one callback and dispatches them simultaneously. On failure the failure callback is called immediately
+        /// and the result of the other tasks is discarded.
+        /// </summary>
+        /// <param name="tasks">A series of tasks to execute in parallel</param>
+        public static UnityTask DispatchAll(params UnityTask[] tasks)
+        {
+            return All(true, tasks);
         }
 
         /// <summary>
         /// Combines multiple tasks of the same type into one callback and runs them sequentially. On failure the failure callback is called immediately
         /// and the result of the other tasks is discarded.
         /// </summary>
-        /// <param name="tasks">A series of tasks to execute in paralell</param>
+        /// <param name="tasks">A series of tasks to execute in sequential orders</param>
         public static UnityTask AllSequential(params Func<UnityTask>[] tasks)
         {
-            UnityTask combinedTask = new UnityTask();
-            List<Action> sequentialActions = new List<Action>();
+            return AllSequential(false, tasks);
+        }
 
-            int activeTaskCount = tasks.Length;
-            object[] taskResults = new object[activeTaskCount];
-
-            for (int i = 0; i < tasks.Length; i++)
-            {
-                int taskCount = i;
-
-                sequentialActions.Add(() =>
-                {
-                    UnityTask task = tasks[taskCount]();
-
-                    task.Then(
-                        onFulfilled: (object result) =>
-                        {
-                            taskResults[taskCount] = result;
-
-                            if (taskCount == sequentialActions.Count - 1)
-                            {
-                                // Last task
-                                combinedTask.Resolve(taskResults);
-                            }
-                            else
-                            {
-                                sequentialActions[taskCount+1]();
-                            }
-                        },
-                        onFailure: (Exception e) =>
-                        {
-                            combinedTask.Reject(e);
-                        }
-                    );
-                });
-
-            }
-
-            sequentialActions[0]();
-
-            return combinedTask;
+        /// <summary>
+        /// Combines multiple tasks of the same type into one callback and runs them sequentially. On failure the failure callback is called immediately
+        /// and the result of the other tasks is discarded.
+        /// </summary>
+        /// <param name="tasks">A series of tasks to execute in sequential orders</param>
+        public static UnityTask DispatchAllSequential(params Func<UnityTask>[] tasks)
+        {
+            return AllSequential(true, tasks);
         }
 
         /// <summary>
@@ -202,8 +145,9 @@
             _finished = true;
             _result = null;
             _exception = error;
-            _waitHandle.Set(); // Unblock synchronous results
             _succeeded = false;
+            
+            _waitHandle.Set(); // Unblock synchronous results
 
             foreach (var callback in _failureCallbacks)
             {
@@ -302,6 +246,100 @@
             }
 
             return this;
+        }
+
+        /// <summary>
+        /// Combines multiple tasks of the same type into one callback and runs them simultaneously. On failure the failure callback is called immediately
+        /// and the result of the other tasks is discarded.
+        /// </summary>
+        /// <param name="tasks">A series of tasks to execute in paralell</param>
+        private static UnityTask All(bool dispatch, params UnityTask[] tasks)
+        {
+            UnityTask combinedTask = new UnityTask(dispatch);
+
+            int activeTaskCount = tasks.Length;
+            object[] taskResults = new object[activeTaskCount];
+            bool tasksSucceeding = true;
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                UnityTask task = tasks[i];
+                int taskCount = i;
+
+                task.Then(
+                    onFulfilled: (object result) =>
+                    {
+                        if (!tasksSucceeding)
+                            return;
+
+                        taskResults[taskCount] = result;
+
+                        activeTaskCount--;
+                        if (activeTaskCount == 0)
+                        {
+                            combinedTask.Resolve(taskResults);
+                        }
+
+                    },
+                    onFailure: (Exception ex) =>
+                    {
+                        tasksSucceeding = false;
+                        combinedTask.Reject(ex); // Bail if one of the task errors out
+                    }
+                );
+            }
+
+            return combinedTask;
+        }
+
+        /// <summary>
+        /// Combines multiple tasks of the same type into one callback and runs them sequentially. On failure the failure callback is called immediately
+        /// and the result of the other tasks is discarded.
+        /// </summary>
+        /// <param name="tasks">A series of tasks to execute in sequential orders</param>
+        private static UnityTask AllSequential(bool dispatch, params Func<UnityTask>[] tasks)
+        {
+            UnityTask combinedTask = new UnityTask(dispatch);
+            List<Action> sequentialActions = new List<Action>();
+
+            int activeTaskCount = tasks.Length;
+            object[] taskResults = new object[activeTaskCount];
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                int taskCount = i;
+
+                sequentialActions.Add(() =>
+                {
+                    UnityTask task = tasks[taskCount]();
+
+                    task.Then(
+                        onFulfilled: (object result) =>
+                        {
+                            taskResults[taskCount] = result;
+
+                            if (taskCount == sequentialActions.Count - 1)
+                            {
+                                // Last task
+                                combinedTask.Resolve(taskResults);
+                            }
+                            else
+                            {
+                                sequentialActions[taskCount+1]();
+                            }
+                        },
+                        onFailure: (Exception e) =>
+                        {
+                            combinedTask.Reject(e);
+                        }
+                    );
+                });
+
+            }
+
+            sequentialActions[0]();
+
+            return combinedTask;
         }
 
         #endregion Methods
