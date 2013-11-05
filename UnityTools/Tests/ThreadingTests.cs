@@ -63,24 +63,24 @@
 
             for (int i = 0; i < taskCount; i++)
             {
-                int i_ = i; // Copy i for lambdas 
-                
+                int i_ = i; // Copy i for lambdas
+
                 UnityTask task = new UnityTask(false);
                 Thread thread = new Thread( (object count) =>
                 {
                     try
                     {
                         int count_ = (int)count;
-    
+
                         Assert.AreEqual(accessCounter, 0, "Two tasks are executing simulaniously");
                         accessCounter++;
-    
+
                         Assert.AreEqual(tasksExecuted, count_, "Tasks executed should be equal to the current index");
                         Thread.Sleep(taskTime);
                         Assert.AreEqual(tasksExecuted, count_, "Tasks executed should be equal to the current index");
-    
+
                         tasksExecuted++;
-    
+
                         accessCounter--;
                         task.Resolve();
                     }
@@ -89,9 +89,9 @@
                         task.Reject(e);
                     }
                 });
-                
+
                 tasks[i_] = () => { thread.Start(i_); return task; };
-                
+
                 threads.Add(thread);
             }
 

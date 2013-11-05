@@ -56,7 +56,7 @@
                 {
                     _waitHandle.WaitOne(); // Result blocks until task is completed making the task synchronous
                 }
-                
+
                 if (_succeeded)
                 {
                     return _result;
@@ -83,16 +83,6 @@
         }
 
         /// <summary>
-        /// Combines multiple tasks of the same type into one callback and dispatches them simultaneously. On failure the failure callback is called immediately
-        /// and the result of the other tasks is discarded.
-        /// </summary>
-        /// <param name="tasks">A series of tasks to execute in parallel</param>
-        public static UnityTask DispatchAll(params UnityTask[] tasks)
-        {
-            return All(true, tasks);
-        }
-
-        /// <summary>
         /// Combines multiple tasks of the same type into one callback and runs them sequentially. On failure the failure callback is called immediately
         /// and the result of the other tasks is discarded.
         /// </summary>
@@ -100,6 +90,16 @@
         public static UnityTask AllSequential(params Func<UnityTask>[] tasks)
         {
             return AllSequential(false, tasks);
+        }
+
+        /// <summary>
+        /// Combines multiple tasks of the same type into one callback and dispatches them simultaneously. On failure the failure callback is called immediately
+        /// and the result of the other tasks is discarded.
+        /// </summary>
+        /// <param name="tasks">A series of tasks to execute in parallel</param>
+        public static UnityTask DispatchAll(params UnityTask[] tasks)
+        {
+            return All(true, tasks);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@
             _result = null;
             _exception = error;
             _succeeded = false;
-            
+
             _waitHandle.Set(); // Unblock synchronous results
 
             foreach (var callback in _failureCallbacks)
