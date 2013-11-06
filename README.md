@@ -13,16 +13,16 @@ UnityTask - Composable Asynchronous Tasks For Unity
 ---------------------------------------------------
 In leue of the .NET 4.5 async methods and Task framework that are missing in Unity's version of Mono, I decided to implement a system to compose asynchronous tasks in a managable way.
 
-It is an implementation of the [Promises/A+](http://promises-aplus.github.io/promises-spec/) specification which is used by the [q](https://github.com/kriskowal/q) framework which I use in node.js.
+It is an implementation of the [Promises/A+](http://promises-aplus.github.io/promises-spec/) specification which is used by the [q](https://github.com/kriskowal/q) framework.
 
-When an asyncronous method is run, it returns immediately with a promise (in this case a UnityTask object) that the task will either suceed or fail in the future. This future object allows callbacks to be added to handle these events. Promises can also be combined into other promises.
+When an asyncronous method is run, it returns immediately with a promise (in this case a UnityTask object) that the task will either suceed or fail in the future. This future object allows callbacks to be added to handle these events. Promises can also be combined into other promises allowing powerful compositions.
 
 #### Creating an asynchronous method
     public UnityTask<string> DownloadFile()
     {
         return new UnityTask<string>( (task) =>
         {
-            // This runs on a seperate thread
+            // This code executes on a new thread
             string result = SomeBlockingDownloadMethod();
             // Uncaught exceptions will get caught internally and reject the task automatically
             task.Resolve(result);
@@ -30,7 +30,7 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
     }
     
 
-#### Same thing with less sugar
+#### The same thing as above with less sugar
     public UnityTask<string> DownloadFile()
     {
         // Create promise
@@ -82,9 +82,26 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
         DownloadFile2(),
         DownloadFile3()
     ).Then(
-        onFulfilled: o  => Debug.Log("All files successfully downloaded."),
-        onFailure: ex   => Debug.Log("Oh No an exeception occurred.").
-        onEnd:          => Debug.Log("Clean up temporary files.")
+        onFulfilled: results    => Debug.Log("All files successfully downloaded."),
+        onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+        onEnd:                  => Debug.Log("Clean up temporary files.")
+    );
+
+#### Getting the results of parallel tasks
+
+    var DownloadAllFiles = UnityTask<string>.All(
+        DownloadFile1(),
+        DownloadFile2(),
+        DownloadFile3()
+    ).Then(
+        onFulfilled: results    => {
+            foreach (var result in results)
+            {
+                Debug.Log("Result: " + result);
+            }
+        },
+        onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+        onEnd:                  => Debug.Log("Clean up temporary files.")
     );
 
 #### Composing tasks sequentially
@@ -101,14 +118,43 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
         onEnd:          => Debug.Log("Clean up temporary files.")
     );
 
+#### Nested chaining
+
+    var DownloadAllFiles = UnityTask.All(
+        DownloadFile1().Then(() => Debug.Log("File 1 is done!")),
+        DownloadFile2().Then(() => Debug.Log("File 2 is done!")),
+        DownloadFile3().Then(() => Debug.Log("File 3 is done!"))
+    ).Then(
+        onFulfilled: results    => Debug.Log("All files successfully downloaded."),
+        onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+        onEnd:                  => Debug.Log("Clean up temporary files.")
+    );
+
+#### Nested Alls
+
+    var DownloadAllFiles = UnityTask.All(
+        DownloadFile1().Then(() => Debug.Log("File 1 is done!")),
+        UnityTask.AllSequential(
+            () => DownloadFile2(),
+            () => DownloadFile3()
+        ).Then(() => Debug.Log("Files 2 and 3 are done!")),
+        DownloadFile4(),
+        DownloadFile5()
+    ).Then(
+        onFulfilled: results    => Debug.Log("All files successfully downloaded."),
+        onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+        onEnd:                  => Debug.Log("Clean up temporary files.")
+    );
+
 UnityDispatcher - A Unity Thread Dispatcher
 -------------------------------------------
 
-Unity is very fussy with the threads you call certain methods from. Method that call into the engine, and even properties such as Application.persistentDataPath need to be executed from the main Unity thread (i.e. from a MonoBehaviour.Update() )
+Unity is very fussy with the threads you call certain methods from. Method that call into the engine, and even properties such as Application.persistentDataPath need to be executed from the main Unity thread (i.e. from a MonoBehaviour.Update() ).
+ A dispatcher executes code on the main thread so that the Unity API can be called safely.
 
 You have to make sure that the UnityDispatcher MonoBehavour is attached to an active GameObject in the scene, otherwise the dispatcher will not execute actions.
 
-#### Basic Dispatching
+#### Basic dispatching
     
     void MethodCalledFromOtherThread()
     {
@@ -125,7 +171,7 @@ You have to make sure that the UnityDispatcher MonoBehavour is attached to an ac
     }
 
 
-#### Blocking Dispatching
+#### Blocking dispatching
 
     void MethodCalledFromOtherThread()
     {
@@ -173,12 +219,13 @@ I am still searching for a good JSON library that works well with Unity and when
 
 #### Composing Calls
     var agent = new UnityAgent();
-    UnityTask.All(
+    UnityTask<string>.All(
         agent.Get("www.url1.com").Begin(),
         agent.Get("www.url2.com").Begin(),
         agent.Get("www.url3.com").Begin()
     ).Then(
         onFulfilled: (responses)  => {
+           // The All method returns an array of results
            foreach (var response in responses)
            {
                 Debug.Log(response.Body);            
@@ -191,11 +238,11 @@ I am still searching for a good JSON library that works well with Unity and when
 Build Environment
 -----------------
 
-I like to be able to build my code seperatly to Unity as I can compile my code with constantly switching to Unity and back among other reasons. To make sure that the code will work in Unity's version of Mono, I added a post build task that compiles the codebase in Unity's version of mcs. This fails the build if you write code that is not supported by Unity. At the moment it is not very flexible as it is hardcoded to my Unity installation location and assumes you are running OS X / can run bash scripts but I'm working on it. You can change the paths in 'unity-check.sh'. Remove the post build task from the solution property window if you are having issues.
+I like to be able to build my code separately to Unity as I can compile my code without constantly switching to Unity and back. To make sure that the code will work in Unity's version of Mono, I added a post build task that compiles the codebase in Unity's version of mcs. This fails the build if you write code that is not supported by Unity. At the moment it is not very flexible as it is hardcoded to my Unity installation location and assumes you are running OS X / can run bash scripts but I'm working on it. You can change the paths in 'unity-check.sh'. Remove the post build task from the solution property window if you are having issues.
 
 I have also added the --aot-only switch to the compiler to try and pick up issues with Mono code JITing which is not supported on iOS.
 
-I am also unit testing heavily, I havn't achieved 100% code coverage yet but I am working on it.
+I am also unit testing heavily, I haven't achieved 100% code coverage yet but I am working on it.
 
 Contribute
 ----------
@@ -207,12 +254,12 @@ When I started developing UnityTools I wanted it to be part of a package system 
 
 Todo List
 ---------
-- [ ] Implement / use existing JSON library that works on all platforms
-- [ ] Integrate JSON library with UnityEngine
-- [ ] Integrate with [Travis CI](https://travis-ci.org/). (Yes it is possible!)
-- [ ] Write more unit tests
-- [ ] Test on multiple devices
-- [ ] Think of more essential Unity tools!
+- [  ] Implement / use existing JSON library that works on all platforms
+- [  ] Integrate JSON library with UnityEngine
+- [  ] Integrate with [Travis CI](https://travis-ci.org/). (Yes it is possible!)
+- [  ] Write more unit tests
+- [  ] Test on multiple devices
+- [  ] Think of more essential Unity tools!
 
 Licence
 -------
