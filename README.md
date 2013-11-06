@@ -1,7 +1,7 @@
 unity-tools
 ===========
 
-Where I work we use [Unity3D](http://unity3d.com/) quite frequently and it constanly amazes me that it lacks functionality that is considered standard or easily obtained in other development environments such as a rest API client or a JSON serializer. It just adds to my frustration when I find a feature of the .NET framework that would be perfect for the job but is partially implemented, broken or missing in Unity's version of Mono. To remedy this I want to start a toolbox of essential tools that will be high quality, open source and tested that people can grab and throw into their Unity project and not have to waste development time building tools that should be already there.
+Where I work, we use [Unity3D](http://unity3d.com/) quite frequently and it constanly amazes how hard it is to find something simple such as a rest API client or JSON serializer library thats open source and maintained. It just adds to my frustration when I find a feature of the .NET framework that would be perfect for the job but is partially implemented, broken or missing in Unity's version of Mono. To remedy this I want to start a toolbox of essential tools that will be high quality, open source and tested that people can grab and throw into their Unity project and not have to waste development time building tools that should be already there.
 
 Goals
 - Code that is high quality and ready for professional environments
@@ -11,7 +11,7 @@ Goals
 
 UnityTask - Composable Asynchronous Tasks For Unity
 ---------------------------------------------------
-In leue of the .NET 4.5 async methods and Task framework I decided to implement a system to compose asynchronous tasks in a managable way.
+In leue of the .NET 4.5 async methods and Task framework that are missing in Unity's version of Mono, I decided to implement a system to compose asynchronous tasks in a managable way.
 
 It is an implementation of the [Promises/A+](http://promises-aplus.github.io/promises-spec/) specification which is used by the [q](https://github.com/kriskowal/q) framework which I use in node.js.
 
