@@ -133,13 +133,13 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
 #### Nested Alls
 
     var DownloadAllFiles = UnityTask.All(
-        DownloadFile1().Then(() => Debug.Log("File 1 is done!")),
+        DownloadFile1(),
         UnityTask.AllSequential(
             () => DownloadFile2(),
             () => DownloadFile3()
         ).Then(() => Debug.Log("Files 2 and 3 are done!")),
-        DownloadFile4().Then(() => Debug.Log("File 4 is done!")),
-        DownloadFile5().Then(() => Debug.Log("File 5 is done!"))
+        DownloadFile4(),
+        DownloadFile5()
     ).Then(
         onFulfilled: results    => Debug.Log("All files successfully downloaded."),
         onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
