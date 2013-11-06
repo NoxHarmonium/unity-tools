@@ -15,7 +15,8 @@
     {
         #region Fields
 
-        protected bool _dispatch;
+        protected IDispatcher _dispatcher;
+        protected List<Action> _endCallbacks = new List<Action>();
         protected Exception _exception = null;
         protected List<Action<Exception>> _failureCallbacks = new List<Action<Exception>>();
         protected bool _finished;
@@ -23,6 +24,7 @@
         protected object _result;
         protected bool _succeeded;
         protected List<Action<object>> _successCallbacks = new List<Action<object>>();
+        protected Thread _thread;
         protected EventWaitHandle _waitHandle;
 
         #endregion Fields
@@ -33,13 +35,45 @@
         /// Initializes a new instance of the <see cref="UnityTask`1"/> class.
         /// </summary>
         /// <param name="dispatchOnUnityThread">If set to <c>true</c> than dispatch callbacks on unity thread.</param>
-        public UnityTask(bool dispatchOnUnityThread = true)
+        public UnityTask(IDispatcher dispatcher = null)
         {
             _waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-            _dispatch = dispatchOnUnityThread;
+            _dispatcher = dispatcher;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnityTask`1"/> class which wraps
+        /// an action, automatically running it on a new thread. All uncaught exceptions 
+        /// thrown in the spawned thread will automatically trigger Task.Reject().
+        /// </summary>
+        /// <param name="taskAction">The delegate that will be executed on a seperate thread.</param>
+        /// <param name="dispatchOnUnityThread">If set to <c>true</c> than dispatch callbacks on unity thread.</param>
+        public UnityTask(UnityTaskAutoThreadDelegate taskAction, IDispatcher dispatcher = null)
+        {
+            _waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            _dispatcher = dispatcher;
+
+            _thread = new Thread( () =>
+            {
+                try
+                {
+                    taskAction(this);
+                }
+                catch (Exception e)
+                {
+                    this.Reject(e);
+                }
+            });
+            _thread.Start();
         }
 
         #endregion Constructors
+
+        #region Delegates
+
+        public delegate void UnityTaskAutoThreadDelegate(UnityTask task);
+
+        #endregion Delegates
 
         #region Properties
 
@@ -68,6 +102,14 @@
             }
         }
 
+        protected bool CanDispatch
+        {
+            get
+            {
+                return _dispatcher != null;
+            }
+        }
+
         #endregion Properties
 
         #region Methods
@@ -79,7 +121,7 @@
         /// <param name="tasks">A series of tasks to execute in parallel</param>
         public static UnityTask All(params UnityTask[] tasks)
         {
-            return All(false, tasks);
+            return All(null, tasks);
         }
 
         /// <summary>
@@ -89,27 +131,7 @@
         /// <param name="tasks">A series of tasks to execute in sequential orders</param>
         public static UnityTask AllSequential(params Func<UnityTask>[] tasks)
         {
-            return AllSequential(false, tasks);
-        }
-
-        /// <summary>
-        /// Combines multiple tasks of the same type into one callback and dispatches them simultaneously. On failure the failure callback is called immediately
-        /// and the result of the other tasks is discarded.
-        /// </summary>
-        /// <param name="tasks">A series of tasks to execute in parallel</param>
-        public static UnityTask DispatchAll(params UnityTask[] tasks)
-        {
-            return All(true, tasks);
-        }
-
-        /// <summary>
-        /// Combines multiple tasks of the same type into one callback and runs them sequentially. On failure the failure callback is called immediately
-        /// and the result of the other tasks is discarded.
-        /// </summary>
-        /// <param name="tasks">A series of tasks to execute in sequential orders</param>
-        public static UnityTask DispatchAllSequential(params Func<UnityTask>[] tasks)
-        {
-            return AllSequential(true, tasks);
+            return AllSequential(null, tasks);
         }
 
         /// <summary>
@@ -120,9 +142,9 @@
         {
             foreach (var callback in _progressCallbacks)
             {
-                if (_dispatch)
+                if (CanDispatch)
                 {
-                    UnityDispatcher.Dispatch( () => callback(progress) );
+                    _dispatcher.Dispatch( () => callback(progress) );
                 }
                 else
                 {
@@ -152,15 +174,17 @@
             foreach (var callback in _failureCallbacks)
             {
                 Action<Exception> cb = callback; // Copy reference so that lambda executes properly
-                if (_dispatch)
+                if (CanDispatch)
                 {
-                    UnityDispatcher.Dispatch( () => cb(error) );
+                    _dispatcher.Dispatch( () => cb(error) );
                 }
                 else
                 {
                     cb(error);
                 }
             }
+
+            FireEndCallbacks();
         }
 
         /// <summary>
@@ -182,33 +206,36 @@
             foreach (var callback in _successCallbacks)
             {
                 Action<object> cb = callback; // Copy reference so that lambda executes properly
-                if (_dispatch)
+                if (CanDispatch)
                 {
-                    UnityDispatcher.Dispatch( () => cb(value) );
+                    _dispatcher.Dispatch( () => cb(value) );
                 }
                 else
                 {
                     cb(value);
                 }
             }
+
+            FireEndCallbacks();
         }
 
         /// <summary>
         /// Add callbacks that will fire on certain task states. If the task has already completed or failed, the related callbacks will fire immediately.
         /// Returns the this task so that calls can be chained together.
         /// </summary>
-        /// <param name="successCallback">Callback that fires when the task succeeds</param>
-        /// <param name="failureCallback">Callback that fires when the task fails</param>
-        /// <param name="progressCallback">Callback that fires when the progress of the task changes</param>
-        public UnityTask Then(Action<object> onFulfilled = null, Action<Exception> onFailure = null, Action<float> onProgress = null)
+        /// <param name="onFulfilled">Callback that fires when the task succeeds</param>
+        /// <param name="onFailure">Callback that fires when the task fails</param>
+        /// <param name="onProgress">Callback that fires when the progress of the task changes</param>
+        /// <param name="onEnd">Callback that fires when the task succeeds or fails</param>
+        public UnityTask Then(Action<object> onFulfilled = null, Action<Exception> onFailure = null, Action<float> onProgress = null, Action onEnd = null)
         {
             if (onFulfilled != null)
             {
                 if (_finished && _succeeded)
                 {
-                    if (_dispatch)
+                    if (CanDispatch)
                     {
-                        UnityDispatcher.Dispatch( () => onFulfilled(_result) );
+                        _dispatcher.Dispatch( () => onFulfilled(_result) );
                     }
                     else
                     {
@@ -225,9 +252,9 @@
             {
                 if (_finished && !_succeeded)
                 {
-                    if (_dispatch)
+                    if (CanDispatch)
                     {
-                        UnityDispatcher.Dispatch( () => onFailure(_exception) );
+                        _dispatcher.Dispatch( () => onFailure(_exception) );
                     }
                     else
                     {
@@ -245,6 +272,11 @@
                 _progressCallbacks.Add(onProgress);
             }
 
+            if (onEnd != null)
+            {
+                _endCallbacks.Add(onEnd);
+            }
+
             return this;
         }
 
@@ -253,9 +285,9 @@
         /// and the result of the other tasks is discarded.
         /// </summary>
         /// <param name="tasks">A series of tasks to execute in paralell</param>
-        private static UnityTask All(bool dispatch, params UnityTask[] tasks)
+        private static UnityTask All(IDispatcher dispatcher, params UnityTask[] tasks)
         {
-            UnityTask combinedTask = new UnityTask(dispatch);
+            UnityTask combinedTask = new UnityTask(dispatcher);
 
             int activeTaskCount = tasks.Length;
             object[] taskResults = new object[activeTaskCount];
@@ -297,9 +329,9 @@
         /// and the result of the other tasks is discarded.
         /// </summary>
         /// <param name="tasks">A series of tasks to execute in sequential orders</param>
-        private static UnityTask AllSequential(bool dispatch, params Func<UnityTask>[] tasks)
+        private static UnityTask AllSequential(IDispatcher dispatcher, params Func<UnityTask>[] tasks)
         {
-            UnityTask combinedTask = new UnityTask(dispatch);
+            UnityTask combinedTask = new UnityTask(dispatcher);
             List<Action> sequentialActions = new List<Action>();
 
             int activeTaskCount = tasks.Length;
@@ -340,6 +372,25 @@
             sequentialActions[0]();
 
             return combinedTask;
+        }
+
+        /// <summary>
+        /// Called internally to trigger all the onEnd callbacks
+        /// </summary>
+        private void FireEndCallbacks()
+        {
+            foreach (var callback in _endCallbacks)
+            {
+                Action cb = callback; // Copy reference so that lambda executes properly
+                if (CanDispatch)
+                {
+                    _dispatcher.Dispatch( cb );
+                }
+                else
+                {
+                    cb();
+                }
+            }
         }
 
         #endregion Methods

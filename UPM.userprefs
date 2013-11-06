@@ -1,11 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnityTools/Tests/ThreadingTests.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnityTools/Threading/UnityTask.cs">
     <Files>
-      <File FileName="UnityTools/Threading/UnityTask`1.cs" Line="76" Column="81" />
-      <File FileName="UnityTools/Threading/UnityTask.cs" Line="36" Column="9" />
-      <File FileName="UnityTools/IO/UnityAgent.cs" Line="10" Column="6" />
-      <File FileName="UnityTools/Tests/ThreadingTests.cs" Line="50" Column="13" />
+      <File FileName="UnityTools/Shared/IInitialiseOnStartup.cs" Line="1" Column="1" />
+      <File FileName="UnityTools/Shared/UnityToolsSceneObject.cs" Line="46" Column="39" />
+      <File FileName="UnityTools/Threading/UnityDispatcher.cs" Line="44" Column="2" />
+      <File FileName="UnityTools/Threading/UnityTask.cs" Line="228" Column="36" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

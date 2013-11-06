@@ -3,7 +3,9 @@
     using System;
 
     using UnityEngine;
-    
+
+    using UnityTools.Utils;
+
     /// <summary>
     /// Represents the master game object that contains all the component for this project.
     /// </summary>

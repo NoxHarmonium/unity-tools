@@ -1,4 +1,4 @@
-﻿namespace UnityTools
+﻿namespace UnityTools.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +25,7 @@
 
             for (int i = 0; i < taskCount; i++)
             {
-                UnityTask task = new UnityTask(false);
+                UnityTask task = new UnityTask();
                 tasks[i] = task;
                 Thread thread = new Thread( () =>
                 {
@@ -65,7 +65,7 @@
             {
                 int i_ = i; // Copy i for lambdas
 
-                UnityTask task = new UnityTask(false);
+                UnityTask task = new UnityTask();
                 Thread thread = new Thread( (object count) =>
                 {
                     try
@@ -106,7 +106,7 @@
         [ExpectedException(typeof(InvalidOperationException))]
         public void TaskCanOnlyRejectOnce()
         {
-            UnityTask t = new UnityTask(false);
+            UnityTask t = new UnityTask();
             t.Then(null, (o) => Console.WriteLine("Task Failed"));
 
             t.Reject(new Exception());
@@ -117,11 +117,43 @@
         [ExpectedException(typeof(InvalidOperationException))]
         public void TaskCanOnlyResolveOnce()
         {
-            UnityTask t = new UnityTask(false);
+            UnityTask t = new UnityTask();
             t.Then((o) => Console.WriteLine("Task Fulfilled"));
 
             t.Resolve();
             t.Resolve();
+        }
+
+        [Test]
+        public void TaskDoesEndOnResolveAndReject()
+        {
+            bool value = false;
+            bool targetValue = true;
+
+            UnityTask t = new UnityTask();
+            t.Then(onEnd: () => value = targetValue);
+
+            t.Resolve(null);
+
+            Assert.AreEqual(value, targetValue);
+
+            value = false;
+
+            t = new UnityTask();
+            t.Then(onEnd: () => value = targetValue);
+
+            t.Reject(null);
+
+            Assert.AreEqual(value, targetValue);
+
+            value = false;
+
+            t = new UnityTask();
+            t.Then(onEnd: () => value = targetValue);
+
+            t.Notify(0f);
+
+            Assert.AreNotEqual(value, targetValue);
         }
 
         [Test]
@@ -130,7 +162,7 @@
             Exception value = null;
             Exception targetValue = new Exception();
 
-            UnityTask t = new UnityTask(false);
+            UnityTask t = new UnityTask();
             t.Then(null, (ex) => value = ex);
 
             t.Reject(targetValue);
@@ -144,7 +176,7 @@
             float value = 0f;
             float targetValue = 1f;
 
-            UnityTask t = new UnityTask(false);
+            UnityTask t = new UnityTask();
             t.Then(null, null, (p) => value = p);
 
             t.Notify(1f);
@@ -158,12 +190,31 @@
             object value = null;
             object targetValue = new object();
 
-            UnityTask t = new UnityTask(false);
+            UnityTask t = new UnityTask();
             t.Then((o) => value = o);
 
             t.Resolve(targetValue);
 
             Assert.That(value == targetValue);
+        }
+        
+        [Test]
+        public void TaskResultIsSynchronous()
+        {
+            const int taskTime = 500; //ms
+            const int targetValue = taskTime; //ms
+            const int tolerance = 10;
+            
+            DateTime startTime = DateTime.Now;
+            
+            UnityTask t = new UnityTask(task => { Thread.Sleep(taskTime); task.Resolve(); });
+            var r = t.Result;
+            
+            TimeSpan totalTime = DateTime.Now - startTime;
+            
+            
+            Assert.AreEqual((float) taskTime, totalTime.TotalMilliseconds , tolerance);
+            
         }
 
         #endregion Methods

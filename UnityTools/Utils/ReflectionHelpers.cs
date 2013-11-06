@@ -1,4 +1,4 @@
-﻿namespace UnityTools
+﻿namespace UnityTools.Utils
 {
     using System;
     using System.Linq;

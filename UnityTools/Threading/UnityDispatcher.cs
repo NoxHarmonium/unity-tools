@@ -16,7 +16,7 @@
     /// <example>
     ///		UnityDispatcher.Dispatch( () => texture.SaveAsPNG("./tex.png") );
     /// </example> 
-    public class UnityDispatcher : MonoBehaviour, IInitialiseOnStartup
+    public class UnityDispatcher : MonoBehaviour, IInitialiseOnStartup, IDispatcher
     {
         #region Fields
 
@@ -29,14 +29,33 @@
 
         #endregion Fields
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the current UnityDispatcher instance.
+        /// </summary>
+        public static UnityDispatcher Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    throw new InvalidOperationException("Cannot use UnityDispatcher until it is attached to a GameObject and initialised.");
+                }
+                return _instance;
+            }
+        }
+
+        #endregion Properties
+
         #region Methods
 
         /// <summary>
         /// Dispatches the action asynchronously on the Unity main thread.
         /// The action will execute in the next frame update phase.
         /// </summary>
-        /// <param name="action">Action.</param>
-        public static void Dispatch(Action action)
+        /// <param name="action">The action to execute on the dispatch thread.</param>
+        public void Dispatch(Action action)
         {
             lock(_lockObj) {
                 _actions.Add(action);
@@ -48,8 +67,8 @@
         /// the current thread until the action is executed.
         /// The action will execute in the next frame update phase.
         /// </summary>
-        /// <param name="action">Action.</param>
-        public static void DispatchWait(Action action)
+        /// <param name="action">The action to execute on the dispatch thread.</param>
+        public void DispatchWait(Action action)
         {
             if (GetCurrentThreadId() == _unityThreadId)
             {
@@ -73,25 +92,11 @@
             UnityToolsSceneObject.Instance.AddComponent<UnityDispatcher>();
         }
 
-        private static int GetCurrentThreadId()
-        {
-            // Although AppDomain.GetCurrentThreadId is depricated, ManagedThreadId did not seem to work properly
-            // on iOS, every ID seemed to be the same.
-            #pragma warning disable 618
-            return AppDomain.GetCurrentThreadId();
-            #pragma warning restore 618
-        }
-
-        private void Awake()
-        {
-            _unityThreadId = GetCurrentThreadId();
-
-            if (_instance == null) {
-                _instance = this;
-            }
-        }
-
-        private void Update()
+        /// <summary>
+        /// This method should be executed on the main dispatch thread to
+        /// execute the queued dispatch actions.
+        /// </summary>
+        public void PumpActionQueue()
         {
             List<Action> actionsCopy = null;
             List<EventWaitHandle> waitHandlesCopy = null;
@@ -117,6 +122,29 @@
                     Debug.LogException(e);
                 }
             }
+        }
+
+        private static int GetCurrentThreadId()
+        {
+            // Although AppDomain.GetCurrentThreadId is depricated, ManagedThreadId did not seem to work properly
+            // on iOS, every ID seemed to be the same.
+            #pragma warning disable 618
+            return AppDomain.GetCurrentThreadId();
+            #pragma warning restore 618
+        }
+
+        private void Awake()
+        {
+            _unityThreadId = GetCurrentThreadId();
+
+            if (_instance == null) {
+                _instance = this;
+            }
+        }
+
+        private void Update()
+        {
+            PumpActionQueue();
         }
 
         #endregion Methods

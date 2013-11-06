@@ -20,12 +20,42 @@
         /// Initializes a new instance of the <see cref="UnityTask`1"/> class.
         /// </summary>
         /// <param name="dispatchOnUnityThread">If set to <c>true</c> than dispatch callbacks on unity thread.</param>
-        public UnityTask(bool dispatchOnUnityThread = true)
-            : base(dispatchOnUnityThread)
+        public UnityTask(IDispatcher dispatcher = null)
+            : base(dispatcher)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnityTask`1"/> class which wraps
+        /// an action, automatically running it on a new thread. All uncaught exceptions 
+        /// thrown in the spawned thread will automatically trigger Task.Reject().
+        /// </summary>
+        /// <param name="taskAction">The delegate that will be executed on a seperate thread.</param>
+        /// <param name="dispatchOnUnityThread">If set to <c>true</c> than dispatch callbacks on unity thread.</param>
+        public UnityTask(UnityTaskAutoThreadGenericDelegate taskAction, IDispatcher dispatcher = null)
+            : base(dispatcher)
+        {
+            _thread = new Thread( () =>
+            {
+                try
+                {
+                    taskAction(this);
+                }
+                catch (Exception e)
+                {
+                    this.Reject(e);
+                }
+            });
+            _thread.Start();
+        }
+
         #endregion Constructors
+
+        #region Delegates
+
+        public delegate void UnityTaskAutoThreadGenericDelegate(UnityTask<T> task);
+
+        #endregion Delegates
 
         #region Properties
 
@@ -38,7 +68,7 @@
         {
             get
             {
-                return (T) Result;
+                return (T) base.Result;
             }
         }
 
