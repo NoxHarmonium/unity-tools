@@ -69,7 +69,7 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
             int count = 0;
             for (var sourceFile = Directory.EnumerateFiles(sourceDir))
             {
-                File.Copy(sourceFile, destDir + File.GetFileName(sourceFile)
+                File.Copy(sourceFile, destDir + File.GetFileName(sourceFile));
                 // Trigger the onProgress callback
                 task.Notify(count / (float) files.length);
                 count++;
