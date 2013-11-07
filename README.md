@@ -26,7 +26,7 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
             string result = SomeBlockingDownloadMethod();
             // Uncaught exceptions will get caught internally and reject the task automatically
             task.Resolve(result);
-        }
+        });
     }
     
 
@@ -207,6 +207,21 @@ You have to make sure that the UnityDispatcher MonoBehavour is attached to an ac
 
         Debug.Log("I will execute third.");
     }
+
+#### Integration with tasks
+    
+    var task = new UnityTask<string>( (task) =>
+    {
+        // This code executes on a new thread
+        string result = SomeBlockingDownloadMethod();
+        // Uncaught exceptions will get caught internally and reject the task automatically
+        task.Resolve(result);
+    }, UnityDispatcher.Instance); // You can pass an object that implements IDispatcher and callbacks will be automatically dispatched
+    
+    task.Then( 
+        onSucess: () => Debug.Log("This will be called on the dispatch thread"))
+    );
+      
 
 
 UnityAgent - A Unity REST API Client
