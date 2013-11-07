@@ -53,12 +53,31 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
         return task;
     }
 
-####  Using the asynchronous method
+####  Using the asynchronous method, all callbacks are optional
     DownloadFile().Then(
         onFulfilled: result  => Debug.Log("Download data: " + result),
         onFailure: ex        => Debug.Log("Oh No an exeception occurred."),
+        onProgress: p        => Debug.Log("Progress changed: " + p),
         onEnd:               => Debug.Log("Clean up temporary files.") // Run regardless of outcome
     );
+    
+#### Notifying progress
+     public UnityTask<string> CopyFiles(string sourceDir, string destDir)
+    {
+        return new UnityTask( (task) =>
+        {
+            int count = 0;
+            for (var sourceFile = Directory.EnumerateFiles(sourceDir))
+            {
+                File.Copy(sourceFile, destDir + File.GetFileName(sourceFile)
+                // Trigger the onProgress callback
+                task.Notify(count / (float) files.length);
+                count++;
+            }
+            // Uncaught exceptions will get caught internally and reject the task automatically
+            task.Resolve();
+        }
+    }
 
 ####  Forcing synchronicity
     try
