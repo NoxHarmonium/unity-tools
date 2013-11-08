@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>UnityTools</RootNamespace>
     <AssemblyName>UnityTools</AssemblyName>
+    <newfilesearch>OnLoadAutoInsert</newfilesearch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,6 +25,7 @@
       <CustomCommands>
         <Command type="Custom" name="Arrange Code" command="mono ../Tools/NArrange/bin/narrange-console.exe ${ProjectDir}" workingdir="${ProjectDir}" />
         <Command type="AfterBuild" name="Unity Build" command="../unity-check.sh ${ProjectDir}" />
+        <Command type="AfterBuild" command="mono-cil-strip ${TargetFile}" />
       </CustomCommands>
     </CustomCommands>
     <GenerateDocumentation>true</GenerateDocumentation>

@@ -1,24 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnityTools/Threading/UnityTask.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnityTools/Tests/IOTests.cs">
     <Files>
-      <File FileName="UnityTools/Shared/IInitialiseOnStartup.cs" Line="1" Column="1" />
-      <File FileName="UnityTools/Shared/UnityToolsSceneObject.cs" Line="46" Column="39" />
-      <File FileName="UnityTools/Threading/UnityDispatcher.cs" Line="44" Column="2" />
-      <File FileName="UnityTools/Threading/UnityTask.cs" Line="228" Column="36" />
+      <File FileName="UnityTools/Tests/IOTests.cs" Line="15" Column="66" />
+      <File FileName="UnityTools/Threading/UnityTask`1.cs" Line="1" Column="1" />
+      <File FileName="UnityTools/Tests/ThreadingTests.cs" Line="1" Column="1" />
+      <File FileName="UnityTools/IO/UnityAgentRequest.cs" Line="1" Column="1" />
+      <File FileName="UnityTools/Threading/UnityTask.cs" Line="1" Column="1" />
+      <File FileName="UnityTools/IO/UnityAgent.cs" Line="1" Column="1" />
+      <File FileName="UnityTools/Threading/UnityDispatcher.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="UnityTools" expanded="True" selected="True">
-            <Node name="References" expanded="True" />
-            <Node name="IO" expanded="True" />
-            <Node name="Properties" expanded="True" />
-            <Node name="Shared" expanded="True" />
-            <Node name="Tests" expanded="True" />
-            <Node name="Threading" expanded="True" />
-            <Node name="Utils" expanded="True" />
-          </Node>
+          <Node name="UnityTools" selected="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">

@@ -240,7 +240,7 @@ Build Environment
 
 I like to be able to build my code separately to Unity as I can compile my code without constantly switching to Unity and back. To make sure that the code will work in Unity's version of Mono, I added a post build task that compiles the codebase in Unity's version of mcs. This fails the build if you write code that is not supported by Unity. At the moment it is not very flexible as it is hardcoded to my Unity installation location and assumes you are running OS X / can run bash scripts but I'm working on it. You can change the paths in 'unity-check.sh'. Remove the post build task from the solution property window if you are having issues.
 
-I have also added the --aot-only switch to the compiler to try and pick up issues with Mono code JITing which is not supported on iOS.
+I have also added the --aot-only switch to the compiler and added a post-build IL stripping task to try and pick up issues to do with Mono JITing code which is not supported on iOS.
 
 I am also unit testing heavily, I haven't achieved 100% code coverage yet but I am working on it.
 
