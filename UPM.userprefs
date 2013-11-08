@@ -1,19 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnityTools/Tests/IOTests.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnityTools/Tests/ThreadingTests.cs">
     <Files>
-      <File FileName="UnityTools/Tests/IOTests.cs" Line="15" Column="66" />
-      <File FileName="UnityTools/Threading/UnityTask`1.cs" Line="1" Column="1" />
-      <File FileName="UnityTools/Tests/ThreadingTests.cs" Line="1" Column="1" />
-      <File FileName="UnityTools/IO/UnityAgentRequest.cs" Line="1" Column="1" />
-      <File FileName="UnityTools/Threading/UnityTask.cs" Line="1" Column="1" />
-      <File FileName="UnityTools/IO/UnityAgent.cs" Line="1" Column="1" />
-      <File FileName="UnityTools/Threading/UnityDispatcher.cs" Line="1" Column="1" />
+      <File FileName="UnityTools/Threading/UnityTask.cs" Line="196" Column="1" />
+      <File FileName="UnityTools/Tests/ThreadingTests.cs" Line="43" Column="37" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="UnityTools" selected="True" />
+          <Node name="UnityTools" expanded="True" selected="True">
+            <Node name="References" expanded="True" />
+            <Node name="Tests" expanded="True" />
+            <Node name="Threading" expanded="True" />
+          </Node>
         </State>
       </Pad>
       <Pad Id="ClassPad">
