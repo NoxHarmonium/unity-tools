@@ -231,15 +231,18 @@
         {
             if (onFulfilled != null)
             {
-                if (_finished && _succeeded)
+                if (_finished)
                 {
-                    if (CanDispatch)
-                    {
-                        _dispatcher.Dispatch( () => onFulfilled(_result) );
-                    }
-                    else
-                    {
-                        onFulfilled(_result);
+                   	if (_succeeded)
+                   	{
+	                    if (CanDispatch)
+	                    {
+	                        _dispatcher.Dispatch( () => onFulfilled(_result) );
+	                    }
+	                    else
+	                    {
+	                        onFulfilled(_result);
+	                    }
                     }
                 }
                 else
@@ -250,15 +253,18 @@
 
             if (onFailure != null)
             {
-                if (_finished && !_succeeded)
+                if (_finished)
                 {
-                    if (CanDispatch)
+                    if (!_succeeded)
                     {
-                        _dispatcher.Dispatch( () => onFailure(_exception) );
-                    }
-                    else
-                    {
-                        onFailure(_exception);
+	                    if (CanDispatch)
+	                    {
+	                        _dispatcher.Dispatch( () => onFailure(_exception) );
+	                    }
+	                    else
+	                    {
+	                        onFailure(_exception);
+	                    }
                     }
                 }
                 else
@@ -272,9 +278,23 @@
                 _progressCallbacks.Add(onProgress);
             }
 
-            if (onEnd != null)
+			if (onEnd != null)
             {
-                _endCallbacks.Add(onEnd);
+                if (_finished)
+                {
+                    if (CanDispatch)
+                    {
+                        _dispatcher.Dispatch( () => onEnd() );
+                    }
+                    else
+                    {
+                        onEnd();
+                    }
+                }
+                else
+                {
+                    _endCallbacks.Add(onFailure);
+                }
             }
 
             return this;
@@ -287,6 +307,11 @@
         /// <param name="tasks">A series of tasks to execute in paralell</param>
         private static UnityTask All(IDispatcher dispatcher, params UnityTask[] tasks)
         {
+            if (tasks == null || tasks.Length == 0)
+            {
+            	return new UnityTask(dispatcher).Resolve();
+            }
+            
             UnityTask combinedTask = new UnityTask(dispatcher);
 
             int activeTaskCount = tasks.Length;
@@ -331,6 +356,11 @@
         /// <param name="tasks">A series of tasks to execute in sequential orders</param>
         private static UnityTask AllSequential(IDispatcher dispatcher, params Func<UnityTask>[] tasks)
         {
+            if (tasks == null || tasks.Length == 0)
+            {
+            	return new UnityTask(dispatcher).Resolve();
+            }
+            
             UnityTask combinedTask = new UnityTask(dispatcher);
             List<Action> sequentialActions = new List<Action>();
 
