@@ -26,7 +26,7 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
             string result = SomeBlockingDownloadMethod();
             // Uncaught exceptions will get caught internally and reject the task automatically
             task.Resolve(result);
-        }
+        });
     }
     
 
@@ -53,12 +53,30 @@ When an asyncronous method is run, it returns immediately with a promise (in thi
         return task;
     }
 
-####  Using the asynchronous method
+####  Using the asynchronous method, all callbacks are optional
     DownloadFile().Then(
         onFulfilled: result  => Debug.Log("Download data: " + result),
         onFailure: ex        => Debug.Log("Oh No an exeception occurred."),
+        onProgress: p        => Debug.Log("Progress changed: " + p),
         onEnd:               => Debug.Log("Clean up temporary files.") // Run regardless of outcome
     );
+    
+#### Notifying progress
+     public UnityTask<string> CopyFiles(string sourceDir, string destDir)
+    {
+        return new UnityTask( (task) =>
+        {
+            int count = 0;
+            for (var sourceFile = Directory.EnumerateFiles(sourceDir))
+            {
+                File.Copy(sourceFile, destDir + File.GetFileName(sourceFile));
+                // Trigger the onProgress callback
+                task.Notify(count / (float) files.length);
+                count++;
+            }
+            task.Resolve();
+        }
+    }
 
 ####  Forcing synchronicity
     try
@@ -188,6 +206,22 @@ You have to make sure that the UnityDispatcher MonoBehavour is attached to an ac
 
         Debug.Log("I will execute third.");
     }
+
+#### Integration with tasks
+    
+    var task = new UnityTask<string>( (task) =>
+        {
+            string result = SomeBlockingDownloadMethod();
+            task.Resolve(result);
+        }, 
+        // You can pass an object that implements IDispatcher and callbacks will be automatically dispatched
+        UnityDispatcher.Instance
+    ); 
+    
+    task.Then( 
+        onSucess: () => Debug.Log("This will be called on the dispatch thread"))
+    );
+      
 
 
 UnityAgent - A Unity REST API Client
