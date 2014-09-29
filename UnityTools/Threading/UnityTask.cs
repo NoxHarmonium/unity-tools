@@ -157,7 +157,7 @@
         /// Finish the task with an error state
         /// </summary>
         /// <param name="error">Error details.</param>
-        public void Reject(Exception error)
+        public UnityTask Reject(Exception error)
         {
             if (_finished)
             {
@@ -169,29 +169,41 @@
             _exception = error;
             _succeeded = false;
 
-            _waitHandle.Set(); // Unblock synchronous results
-
-            foreach (var callback in _failureCallbacks)
+            try 
             {
-                Action<Exception> cb = callback; // Copy reference so that lambda executes properly
-                if (CanDispatch)
+                foreach (var callback in _failureCallbacks)
                 {
-                    _dispatcher.Dispatch( () => cb(error) );
+                    Action<Exception> cb = callback; // Copy reference so that lambda executes properly
+                    if (CanDispatch)
+                    {
+                        _dispatcher.Dispatch( () => cb(error) );
+                    }
+                    else
+                    {
+                        cb(error);
+                    }
                 }
-                else
-                {
-                    cb(error);
-                }
+            } 
+            catch (Exception e) 
+            {
+                // Catch errors here so they don't break the 
+                // loop and result in callbacks that don't fire.
+                Debug.LogError("Reject: Problem executing callback:");
+                Debug.LogException(e);
             }
 
             FireEndCallbacks();
+
+            _waitHandle.Set(); // Unblock synchronous results
+
+            return this;
         }
 
         /// <summary>
         /// Finish the task with a result
         /// </summary>
         /// <param name="value">The result of the task.</param>
-        public void Resolve(object value = null)
+        public UnityTask Resolve(object value = null)
         {
             if (_finished)
             {
@@ -200,23 +212,37 @@
 
             _finished = true;
             _result = value;
-            _waitHandle.Set(); // Unblock synchronous result
             _succeeded = true;
 
             foreach (var callback in _successCallbacks)
             {
-                Action<object> cb = callback; // Copy reference so that lambda executes properly
-                if (CanDispatch)
+                try 
                 {
-                    _dispatcher.Dispatch( () => cb(value) );
-                }
-                else
+                    Action<object> cb = callback; // Copy reference so that lambda executes properly
+                    if (CanDispatch)
+                    {
+                        _dispatcher.Dispatch( () => cb(value) );
+                    }
+                    else
+                    {
+                        cb(value);
+                    }
+                } 
+                catch (Exception e) 
                 {
-                    cb(value);
+                    // Catch errors here so they don't break the 
+                    // loop and result in callbacks that don't fire.
+                    Debug.LogError("Reject: Problem executing callback:");
+                    Debug.LogException(e);
                 }
+
             }
 
             FireEndCallbacks();
+
+            _waitHandle.Set(); // Unblock synchronous result
+
+            return this;
         }
 
         /// <summary>
@@ -293,7 +319,7 @@
                 }
                 else
                 {
-                    _endCallbacks.Add(onFailure);
+                    _endCallbacks.Add(onEnd);
                 }
             }
 
@@ -304,7 +330,7 @@
         /// Combines multiple tasks of the same type into one callback and runs them simultaneously. On failure the failure callback is called immediately
         /// and the result of the other tasks is discarded.
         /// </summary>
-        /// <param name="tasks">A series of tasks to execute in paralell</param>
+        /// <param name="tasks">A series of tasks to execute in parallel</param>
         private static UnityTask All(IDispatcher dispatcher, params UnityTask[] tasks)
         {
             if (tasks == null || tasks.Length == 0)
@@ -340,8 +366,11 @@
                     },
                     onFailure: (Exception ex) =>
                     {
+                        // Only reject the task the first time
+                        if (tasksSucceeding) {
+                            combinedTask.Reject(ex); // Bail if one of the task errors out
+                        }
                         tasksSucceeding = false;
-                        combinedTask.Reject(ex); // Bail if one of the task errors out
                     }
                 );
             }
@@ -411,14 +440,23 @@
         {
             foreach (var callback in _endCallbacks)
             {
-                Action cb = callback; // Copy reference so that lambda executes properly
-                if (CanDispatch)
+                try {
+                    Action cb = callback; // Copy reference so that lambda executes properly
+                    if (CanDispatch)
+                    {
+                        _dispatcher.Dispatch( cb );
+                    }
+                    else
+                    {
+                        cb();
+                    }
+                } 
+                catch (Exception e) 
                 {
-                    _dispatcher.Dispatch( cb );
-                }
-                else
-                {
-                    cb();
+                    // Catch errors here so they don't break the 
+                    // loop and result in callbacks that don't fire.
+                    Debug.LogError("Reject: Problem executing callback:");
+                    Debug.LogException(e);
                 }
             }
         }
