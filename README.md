@@ -246,7 +246,7 @@ I really liked the style of the REST client that I use in Node.js called [SuperA
 
 I have used UnityTasks to implement all the functionality so it is easy to compose API tasks.
 
-I am still searching for a good JSON library that works well with Unity and when I do I'll integrate it seamlessly with UnityAgent. For now you can only send and receive string data.
+I have found a good JSON library that works well with Unity and I am integrating it seamlessly with UnityAgent. For now you can only send and receive string data.
 
 #### Simple Gets
 ```c#
