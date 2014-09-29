@@ -1,7 +1,7 @@
 unity-tools
 ===========
 
-Where I work, we use [Unity3D](http://unity3d.com/) quite frequently and it constanly amazes how hard it is to find something simple such as a rest API client or JSON serializer library thats open source and maintained. It just adds to my frustration when I find a feature of the .NET framework that would be perfect for the job but is partially implemented, broken or missing in Unity's version of Mono. To remedy this I want to start a toolbox of essential tools that will be high quality, open source and tested that people can grab and throw into their Unity project and not have to waste development time building tools that should be already there.
+Where I work, we use [Unity3D](http://unity3d.com/) quite frequently and it constantly amazes how hard it is to find something simple such as a rest API client or JSON serializer library thats open source and maintained. It just adds to my frustration when I find a feature of the .NET framework that would be perfect for the job but is partially implemented, broken or missing in Unity's version of Mono. To remedy this I want to start a toolbox of essential tools that will be high quality, open source and tested that people can grab and throw into their Unity project and not have to waste development time building tools that should be already there.
 
 Goals
 - Code that is high quality and ready for professional environments
@@ -11,11 +11,11 @@ Goals
 
 UnityTask - Composable Asynchronous Tasks For Unity
 ---------------------------------------------------
-In leue of the .NET 4.5 async methods and Task framework that are missing in Unity's version of Mono, I decided to implement a system to compose asynchronous tasks in a managable way.
+In leue of the .NET 4.5 async methods and Task framework that are missing in Unity's version of Mono, I decided to implement a system to compose asynchronous tasks in a manageable way.
 
 It is an implementation of the [Promises/A+](http://promises-aplus.github.io/promises-spec/) specification which is used by the [q](https://github.com/kriskowal/q) framework.
 
-When an asyncronous method is run, it returns immediately with a promise (in this case a UnityTask object) that the task will either suceed or fail in the future. This future object allows callbacks to be added to handle these events. Promises can also be combined into other promises allowing powerful compositions.
+When an asynchronous method is run, it returns immediately with a promise (in this case a UnityTask object) that the task will either succeed or fail in the future. This future object allows callbacks to be added to handle these events. Promises can also be combined into other promises allowing powerful compositions.
 
 #### Creating an asynchronous method
 ```c#
@@ -61,7 +61,7 @@ public UnityTask<string> DownloadFile()
 ```c#
 DownloadFile().Then(
     onFulfilled: result  => Debug.Log("Download data: " + result),
-    onFailure: ex        => Debug.Log("Oh No an exeception occurred."),
+    onFailure: ex        => Debug.Log("Oh No an exception occurred."),
     onProgress: p        => Debug.Log("Progress changed: " + p),
     onEnd:               => Debug.Log("Clean up temporary files.") // Run regardless of outcome
 );
@@ -96,8 +96,8 @@ try
 }
 catch (Exception e)
 {
-     // The Result property also propogates exceptions from UnityTask.Reject()
-     Debug.Log("Oh No an exeception occurred.");
+     // The Result property also propagates exceptions from UnityTask.Reject()
+     Debug.Log("Oh No an exception occurred.");
 }
 
 Debug.Log("Clean up temporary files.");
@@ -111,7 +111,7 @@ var DownloadAllFiles = UnityTask.All(
     DownloadFile3()
 ).Then(
     onFulfilled: results    => Debug.Log("All files successfully downloaded."),
-    onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+    onFailure: ex           => Debug.Log("Oh No an exception occurred.").
     onEnd:                  => Debug.Log("Clean up temporary files.")
 );
 ```
@@ -129,7 +129,7 @@ var DownloadAllFiles = UnityTask<string>.All(
             Debug.Log("Result: " + result);
         }
     },
-    onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+    onFailure: ex           => Debug.Log("Oh No an exception occurred.").
     onEnd:                  => Debug.Log("Clean up temporary files.")
 );
 ```
@@ -144,7 +144,7 @@ var DownloadAllFiles = UnityTask.AllSequential(
     () => DownloadFile3()
 ).Then(
     onFulfilled: o  => Debug.Log("All files successfully downloaded."),
-    onFailure: ex   => Debug.Log("Oh No an exeception occurred.").
+    onFailure: ex   => Debug.Log("Oh No an exception occurred.").
     onEnd:          => Debug.Log("Clean up temporary files.")
 );
 ```
@@ -157,7 +157,7 @@ var DownloadAllFiles = UnityTask.All(
     DownloadFile3().Then(() => Debug.Log("File 3 is done!"))
 ).Then(
     onFulfilled: results    => Debug.Log("All files successfully downloaded."),
-    onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+    onFailure: ex           => Debug.Log("Oh No an exception occurred.").
     onEnd:                  => Debug.Log("Clean up temporary files.")
 );
 ```
@@ -174,7 +174,7 @@ var DownloadAllFiles = UnityTask.All(
     DownloadFile5()
 ).Then(
     onFulfilled: results    => Debug.Log("All files successfully downloaded."),
-    onFailure: ex           => Debug.Log("Oh No an exeception occurred.").
+    onFailure: ex           => Debug.Log("Oh No an exception occurred.").
     onEnd:                  => Debug.Log("Clean up temporary files.")
 );
 ```
@@ -242,11 +242,11 @@ task.Then(
 UnityAgent - A Unity REST API Client
 ------------------------------------
 
-I really liked the style of the REST client that I use in Node.js called [SuperAgent](http://visionmedia.github.io/superagent/) so I took heavy insperation from it.
+I really liked the style of the REST client that I use in Node.js called [SuperAgent](http://visionmedia.github.io/superagent/) so I took heavy inspiration from it.
 
 I have used UnityTasks to implement all the functionality so it is easy to compose API tasks.
 
-I am still searching for a good JSON library that works well with Unity and when I do I'll integrate it seemlessly with UnityAgent. For now you can only send and recieve string data.
+I am still searching for a good JSON library that works well with Unity and when I do I'll integrate it seamlessly with UnityAgent. For now you can only send and receive string data.
 
 #### Simple Gets
 ```c#
@@ -292,9 +292,7 @@ UnityTask<string>.All(
 Build Environment
 -----------------
 
-I like to be able to build my code separately to Unity as I can compile my code without constantly switching to Unity and back. To make sure that the code will work in Unity's version of Mono, I added a post build task that compiles the codebase in Unity's version of mcs. This fails the build if you write code that is not supported by Unity. At the moment it is not very flexible as it is hardcoded to my Unity installation location and assumes you are running OS X / can run bash scripts but I'm working on it. You can change the paths in 'unity-check.sh'. Remove the post build task from the solution property window if you are having issues.
-
-I have also added the --aot-only switch to the compiler and added a post-build IL stripping task to try and pick up issues to do with Mono JITing code which is not supported on iOS.
+I originally tried to build it separately to Unity but it turned out to be a big hassle with little gain, considering the library is designed to be used with Unity anyway. The test environment is now a Unity project. You can run unit tests by using the 'Unity Test Tools' menu in Unity. 
 
 I am also unit testing heavily, I haven't achieved 100% code coverage yet but I am working on it.
 
