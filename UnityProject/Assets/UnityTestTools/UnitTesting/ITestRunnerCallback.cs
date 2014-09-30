@@ -1,4 +1,5 @@
 using System;
+using NUnit.Core;
 
 namespace UnityTest.UnitTestRunner
 {

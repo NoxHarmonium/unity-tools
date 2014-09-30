@@ -1,8 +1,7 @@
-namespace UnityTest
+﻿namespace UnityTest
 {
-	public interface IUnitTestEngine
+	public interface IUnitTestEngine : IUnitBasicTestEngine
 	{
 		UnitTestRendererLine GetTests (out UnitTestResult[] results, out string[] categories);
-		void RunTests ( TestFilter filter, UnitTestRunner.ITestRunnerCallback testRunnerEventListener );
 	}
 }
