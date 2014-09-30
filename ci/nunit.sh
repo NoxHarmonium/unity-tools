@@ -5,7 +5,7 @@ cd XamarinProject/UnityTools;
 nuget install NUnit.Runners -o packages;
 
 runTest(){
-    mono packages/NUnit.Runners.2.6.1/tools/nunit-console.exe -noxml -nodots -labels -stoponerror $@
+    mono packages/NUnit.Runners.2.6.3/tools/nunit-console.exe -noxml -nodots -labels -stoponerror $@
    if [ $? -ne 0 ]
    then   
      exit 1
