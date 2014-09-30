@@ -29,7 +29,9 @@
                 .Begin()
                 .Result;
 
+
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+			StringAssert.AreEqualIgnoringCase((string)response.JSON["url"], url);
         }
         
         [Test]
@@ -47,6 +49,7 @@
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.That(response.Body.Contains(testString));
+			StringAssert.AreEqualIgnoringCase((string)response.JSON["url"], url);
         }
         
         [Test]
@@ -64,6 +67,7 @@
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.That(response.Body.Contains(testString));
+			StringAssert.AreEqualIgnoringCase((string)response.JSON["url"], url);
         }
         
         [Test]
@@ -81,6 +85,7 @@
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.That(response.Body.Contains(testString));
+			StringAssert.AreEqualIgnoringCase((string)response.JSON["url"], url);
         }
         
         [Test]
@@ -138,7 +143,7 @@
                 .Result;
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.That(response.Body.Contains("\"gzipped\": true"));
+			Assert.That((bool)response.JSON["gzipped"] == true);
         }
 
         private string GetTestUrl(string verb)

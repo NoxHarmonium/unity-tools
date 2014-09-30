@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Net;
+	using LitJson;
 
     public class UnityAgentResponse
     {
@@ -10,6 +11,7 @@
 
         protected string _body;
         protected HttpWebResponse _response;
+		protected JsonData _cachedJSON;
 
         #endregion Fields
 
@@ -52,9 +54,21 @@
         {
             get
             {
-                return _response.StatusDescription;
+				return _response.StatusDescription;
             }
         }
+
+		public JsonData JSON 
+		{
+			get 
+			{
+				if (_cachedJSON == null) 
+				{
+					_cachedJSON = JsonMapper.ToObject(this.Body);
+				}
+				return _cachedJSON;
+			}
+		}
 
         #endregion Properties
 
