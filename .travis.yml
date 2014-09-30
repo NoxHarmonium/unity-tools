@@ -18,5 +18,5 @@ before_install:
 
 script:
  - xbuild XamarinProject/XamarinProject.sln 
- - ci/nunit.sh XamarinProject/UnityTools/bin/Debug/UnityTools.dll
+ - ci/nunit.sh bin/Debug/UnityTools.dll
 
