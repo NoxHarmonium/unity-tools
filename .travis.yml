@@ -13,3 +13,4 @@ before_install:
 script:
  - xbuild UnityProject/UnityProject.sln 
  - ci/nunit.sh UnityProject/obj/Debug/*.dll
+ 
