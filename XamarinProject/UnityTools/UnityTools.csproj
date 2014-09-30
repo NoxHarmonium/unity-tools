@@ -111,7 +111,9 @@
       <Link>UnityTools\Shared\UnityToolsSceneObject.cs</Link>
     </Compile>
     <Compile Include="UnityTools\Shared\FakeUnity.cs" />
-    <Compile Include="UnityTools\Utils\Math.cs" />
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Utils\Math.cs">
+      <Link>UnityTools\Utils\Math.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
