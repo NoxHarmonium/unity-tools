@@ -114,6 +114,9 @@
     <Compile Include="..\..\UnityProject\Assets\UnityTools\Utils\Math.cs">
       <Link>UnityTools\Utils\Math.cs</Link>
     </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\IO\UnityAgentJsonDataType.cs">
+      <Link>UnityTools\IO\UnityAgentJsonDataType.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

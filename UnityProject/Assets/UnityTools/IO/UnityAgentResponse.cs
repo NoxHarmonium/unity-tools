@@ -11,7 +11,7 @@
 
         protected string _body;
         protected HttpWebResponse _response;
-		protected JsonData _cachedJSON;
+		protected JsonData _cachedJson;
 
         #endregion Fields
 
@@ -58,15 +58,15 @@
             }
         }
 
-		public JsonData JSON 
+		public JsonData Json
 		{
 			get 
 			{
-				if (_cachedJSON == null) 
+				if (_cachedJson == null) 
 				{
-					_cachedJSON = JsonMapper.ToObject(this.Body);
+					_cachedJson = JsonMapper.ToObject(this.Body);
 				}
-				return _cachedJSON;
+				return _cachedJson;
 			}
 		}
 

@@ -8,6 +8,8 @@
     using UnityTools.Threading;
     using UnityTools.Utils;
 
+    using LitJson;
+
     public class UnityAgentRequest
     {
         #region Fields
@@ -148,10 +150,32 @@
             return this;
         }
 
-        /// <summary>
-        /// Sets the body data of the request as a string. This method assumes the use of
-        /// the application/x-www-form-urlencoded data type <see cref="UnityAgentFormDataType"/>. 
+		/// <summary>
+        /// Sets the body data of the request as a JSON object. This method assumes the use of
+        /// the application/x-www-form-urlencoded data type (<see cref="UnityAgentFormDataType"/>) and
+        /// will append the data each time this method is called seperated by an ampersand.
         /// To set a custom data type use the other overloads.
+        /// </summary>
+        /// <param name="data">The body data of the request.</param>
+        /// <returns>Returns this <see cref="UnityAgentRequest"/> object so that calls can be chained.</returns>
+        public UnityAgentRequest Send(JsonData data)
+        {
+            if (_data == null)
+            {
+                var jsonDataPayload = new UnityAgentJsonDataType();
+				jsonDataPayload.SetJsonData(data);
+				_data = jsonDataPayload;
+            }
+            else
+            {
+            	throw new Exception("Can only send one JSON payload per request.");
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the data of a request. This is a low level method. You would usually
+        /// one of the other overloads of this method to send text or JSON data.
         /// </summary>
         /// <param name="body">The body data of the request.</param>
         /// <returns>Returns this <see cref="UnityAgentRequest"/> object so that calls can be chained.</returns>
