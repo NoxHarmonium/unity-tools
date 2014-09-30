@@ -321,10 +321,6 @@ Contribute
 ----------
 If you have essential building blocks that help you develop in Unity that you wish to share, please do!
 
-Why Is The Solution File Called UPM?
-------------------------------------
-When I started developing UnityTools I wanted it to be part of a package system called Unity Package Manager which I was going to model off the [Node Package Manager](https://npmjs.org/) or the [Sublime Text Package Control](https://sublime.wbond.net/). I havn't completly given up on the idea, it would be nice to have a collection of high quality developer contributed open source libraries for Unity but it is less useful in the short term.
-
 Todo List
 ---------
 - [   ] Write more unit tests
