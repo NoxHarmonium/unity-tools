@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{105FFD0D-683E-4051-A426-7EE80DAD18DE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UnityTools</RootNamespace>
+    <AssemblyName>UnityTools</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\IO\UnityAgent.cs">
+      <Link>UnityTools\IO\UnityAgent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\IO\UnityAgentDataType.cs">
+      <Link>UnityTools\IO\UnityAgentDataType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\IO\UnityAgentFormDataType.cs">
+      <Link>UnityTools\IO\UnityAgentFormDataType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\IO\UnityAgentRequest.cs">
+      <Link>UnityTools\IO\UnityAgentRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\IO\UnityAgentResponse.cs">
+      <Link>UnityTools\IO\UnityAgentResponse.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Shared\IInitialiseOnStartup.cs">
+      <Link>UnityTools\Shared\IInitialiseOnStartup.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Tests\Editor\IOTests.cs">
+      <Link>UnityTools\Tests\Editor\IOTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Tests\Editor\ThreadingTests.cs">
+      <Link>UnityTools\Tests\Editor\ThreadingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Threading\IDispatcher.cs">
+      <Link>UnityTools\Threading\IDispatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Threading\UnityTask.cs">
+      <Link>UnityTools\Threading\UnityTask.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Threading\UnityTask`1.cs">
+      <Link>UnityTools\Threading\UnityTask`1.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Utils\Extensions.cs">
+      <Link>UnityTools\Utils\Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Utils\ReflectionHelpers.cs">
+      <Link>UnityTools\Utils\ReflectionHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\IJsonWrapper.cs">
+      <Link>litjson\src\LitJson\IJsonWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\JsonData.cs">
+      <Link>litjson\src\LitJson\JsonData.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\JsonException.cs">
+      <Link>litjson\src\LitJson\JsonException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\JsonMapper.cs">
+      <Link>litjson\src\LitJson\JsonMapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\JsonMockWrapper.cs">
+      <Link>litjson\src\LitJson\JsonMockWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\JsonReader.cs">
+      <Link>litjson\src\LitJson\JsonReader.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\JsonWriter.cs">
+      <Link>litjson\src\LitJson\JsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\Lexer.cs">
+      <Link>litjson\src\LitJson\Lexer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\litjson\src\LitJson\ParserToken.cs">
+      <Link>litjson\src\LitJson\ParserToken.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Threading\UnityDispatcher.cs">
+      <Link>UnityTools\Threading\UnityDispatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Shared\SimulatedMonoBehaviour.cs">
+      <Link>UnityTools\Shared\SimulatedMonoBehaviour.cs</Link>
+    </Compile>
+    <Compile Include="..\..\UnityProject\Assets\UnityTools\Shared\UnityToolsSceneObject.cs">
+      <Link>UnityTools\Shared\UnityToolsSceneObject.cs</Link>
+    </Compile>
+    <Compile Include="UnityTools\Shared\FakeUnity.cs" />
+    <Compile Include="UnityTools\Utils\Math.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="UnityTools\" />
+    <Folder Include="litjson\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\UnityProject\Assets\litjson\COPYING">
+      <Link>litjson\COPYING</Link>
+    </None>
+    <None Include="..\..\UnityProject\Assets\litjson\README.md">
+      <Link>litjson\README.md</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

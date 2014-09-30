@@ -181,7 +181,7 @@
 
             t.Notify(1f);
 
-            Assert.That(UnityEngine.Mathf.Approximately(value, targetValue));
+            Assert.That(Utils.Math.NearlyEqual(value, targetValue));
         }
 
         [Test]
