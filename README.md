@@ -3,9 +3,15 @@ unity-tools
 
 [![Build Status](https://travis-ci.org/NoxHarmonium/unity-tools.svg?branch=master)](https://travis-ci.org/NoxHarmonium/unity-tools)
 
-Where I work, we use [Unity3D](http://unity3d.com/) quite frequently and it constantly amazes how hard it is to find something simple such as a rest API client or JSON serializer library thats open source and maintained. It just adds to my frustration when I find a feature of the .NET framework that would be perfect for the job but is partially implemented, broken or missing in Unity's version of Mono. To remedy this I want to start a toolbox of essential tools that will be high quality, open source and tested that people can grab and throw into their Unity project and not have to waste development time building tools that should be already there.
+Unity-tools is a toolkit for scripting in [Unity3D](http://unity3d.com/) which greatly streamlines asychronous tasks, particularly with HTTP requests. 
 
-Goals
+Unity-tools is made up of:
+- UnityTask - Composable Asynchronous Tasks For Unity
+- UnityDispatcher - A Unity Thread Dispatcher
+- UnityAgent - A Unity REST API Client
+- [litjson](http://lbv.github.io/litjson/) - A third party JSON parser used by the REST client
+
+The project goals are:
 - Code that is high quality and ready for professional environments
 - Code that is thoroughly unit tested
 - Code that is decoupled from Unity's (as much as possible)
@@ -261,6 +267,17 @@ new UnityAgent()
     );
 ```
 
+#### JSON Gets
+```c#
+new UnityAgent()
+    .Get("http://httpbin.org/get")
+    .Begin()
+    .Then(
+        (response)  => Debug.Log((string)response.JSON["some_key"]),
+        (ex)        => Debug.Log("An error occurred")
+    );
+```
+
 #### Simple Posts
 ```c#
 new UnityAgent()
@@ -294,9 +311,11 @@ UnityTask<string>.All(
 Build Environment
 -----------------
 
-I originally tried to build it separately to Unity but it turned out to be a big hassle with little gain, considering the library is designed to be used with Unity anyway. The test environment is now a Unity project. You can run unit tests by using the 'Unity Test Tools' menu in Unity. 
+There are two seperate build environments that share the same code base. UnityProject is for testing the code with the Unity3D compiler and integrating it with Unity3D projects. XamarinProject can be opened in Xamarin Studio and will compile without Unity3D with the use of harness classes that pretend to be Unity but don't actually do anything (see FakeUnity.cs). As the project doesn't actually depend on Unity functionallity it is fine for testing. 
 
-I am also unit testing heavily, I haven't achieved 100% code coverage yet but I am working on it.
+I recommend using Xamarin for most of the development and only switching to Unity to make sure the code compiles there.
+
+I am  unit testing heavily, I haven't achieved 100% code coverage yet but I am working on it.
 
 Contribute
 ----------
@@ -308,12 +327,9 @@ When I started developing UnityTools I wanted it to be part of a package system 
 
 Todo List
 ---------
-- [  ] Implement / use existing JSON library that works on all platforms
-- [  ] Integrate JSON library with UnityEngine
-- [  ] Integrate with [Travis CI](https://travis-ci.org/). (Yes it is possible!)
-- [  ] Write more unit tests
-- [  ] Test on multiple devices
-- [  ] Think of more essential Unity tools!
+- [   ] Write more unit tests
+- [   ] Test on multiple devices
+- [   ] Think of more essential Unity tools!
 
 Licence
 -------
