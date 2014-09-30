@@ -1,6 +1,8 @@
 unity-tools
 ===========
 
+[![Build Status](https://travis-ci.org/NoxHarmonium/unity-tools.svg?branch=master)](https://travis-ci.org/NoxHarmonium/unity-tools)
+
 Where I work, we use [Unity3D](http://unity3d.com/) quite frequently and it constantly amazes how hard it is to find something simple such as a rest API client or JSON serializer library thats open source and maintained. It just adds to my frustration when I find a feature of the .NET framework that would be perfect for the job but is partially implemented, broken or missing in Unity's version of Mono. To remedy this I want to start a toolbox of essential tools that will be high quality, open source and tested that people can grab and throw into their Unity project and not have to waste development time building tools that should be already there.
 
 Goals
