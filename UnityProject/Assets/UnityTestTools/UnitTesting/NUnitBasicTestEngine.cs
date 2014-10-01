@@ -4,7 +4,6 @@ using System.Reflection;
 using NUnit.Core;
 using System.Linq;
 using NUnit.Core.Filters;
-using UnityEditor;
 using UnityEngine;
 
 namespace UnityTest
@@ -18,7 +17,15 @@ namespace UnityTest
 			"Assembly-UnityScript-Editor"
 		};
 		private TestSuite testSuite;
+		private string productName;
 
+
+		public NUnitBasicTestEngine(string productName) {
+			List<String> assemblies = GetAssembliesWithTests ().Select (a=>a.Location).ToList ();
+			TestSuite suite = PrepareTestSuite (assemblies);
+			testSuite = suite;
+			this.productName = productName;
+		}
 
 		public void RunTests (UnitTestRunner.ITestRunnerCallback testRunnerEventListener)
 		{
@@ -29,13 +36,6 @@ namespace UnityTest
 		{
 			try
 			{
-				if (testSuite == null)
-				{
-					List<String> assemblies = GetAssembliesWithTests ().Select (a=>a.Location).ToList ();
-					TestSuite suite = PrepareTestSuite (assemblies);
-					testSuite = suite;
-				}
-
 				if (testRunnerEventListener != null)
 					testRunnerEventListener.RunStarted (testSuite.TestName.FullName, testSuite.TestCount);
 				
@@ -67,7 +67,7 @@ namespace UnityTest
 		private TestSuite PrepareTestSuite(List<String> assemblyList)
 		{
 			CoreExtensions.Host.InitializeService();
-			var testPackage = new TestPackage (PlayerSettings.productName, assemblyList);
+			var testPackage = new TestPackage (productName, assemblyList);
 			var builder = new TestSuiteBuilder();
 			TestExecutionContext.CurrentContext.TestPackage = testPackage;
 			TestSuite suite = builder.Build(testPackage);
